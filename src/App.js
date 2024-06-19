@@ -25,6 +25,8 @@ import PaymentSuccessfull from './Components/PaymentSuccessfull';
 import MyOrders from './Components/MyOrders';
 import Booked from './Components/Booked';
 import DisplayProduct from './Components/DisplayProduct';
+import Loading from './Components/Loading';
+import TopLoadingBar from './Components/TopLoadingBar';
 // import Cancel from './Components/Cancel';
 
 
@@ -62,19 +64,19 @@ function App() {
     const cart = fetch.data.user.cart
     const book = fetch.data.user.book
     // console.log('USER1: ' ,ContextItems.user , 'CART: ' ,ContextItems.cart , 'BOOK: ' ,ContextItems.bookedProducts)
-    
+
     // ContextItems.setUser(user)
     if (fetch.data.user) {
       const cartCount = fetch.data.user.cart.length
       setUser(user)
       setCartCount(cartCount)
       setCart(fetch.data.user.cart)
-        // await ContextItems.setCart(ContextItems.cart.concat(cart))
-        await ContextItems.setBookedProducts(book)
-        await ContextItems.setCart(cart)
-        await ContextItems.setUser(fetch.data.user)
-        console.log('USER: ' ,ContextItems.user , 'CART: ' ,ContextItems.cart , 'BOOK: ' ,ContextItems.bookedProducts)
-      }
+      // await ContextItems.setCart(ContextItems.cart.concat(cart))
+      await ContextItems.setBookedProducts(book)
+      await ContextItems.setCart(cart)
+      await ContextItems.setUser(fetch.data.user)
+      console.log('USER: ', ContextItems.user, 'CART: ', ContextItems.cart, 'BOOK: ', ContextItems.bookedProducts)
+    }
 
   }
 
@@ -86,16 +88,16 @@ function App() {
   return (
     <div className="App">
       <ContextData>
-        <LoadingBar
-          color='#2997ff'
-          progress={progress}
-          // onLoaderFinished={() => setProgress(0)}
+      {/* <LoadingBar
+          color='#FF5F00'
+          progress={ContextItems.progress}
           height={4}
-        />
+        /> */}
+        <TopLoadingBar />
         <BrowserRouter>
           <Navbar cartCount={cartCount} setCartCount={setCartCount} cart={cart} />
           <Routes>
-            <Route path="/" element={<Home user = {user} cartCount={cartCount} setCartCount={setCartCount} setProgress={setProgress} cart={cart} setCart={setCart} setBookedProducts={setBookedProducts} bookedProducts={bookedProducts} />} setProgress={setProgress}/>
+            <Route path="/" element={<Home user={user} cartCount={cartCount} setCartCount={setCartCount} setProgress={setProgress} cart={cart} setCart={setCart} setBookedProducts={setBookedProducts} bookedProducts={bookedProducts} />} setProgress={setProgress} />
             <Route path="/signin" element={<SignIn setCartCount={setCartCount} cart={cart} setCart={setCart} setBookedProducts={setBookedProducts} />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/profile" element={<Profile setCartCount={setCartCount} setBookedProducts={setBookedProducts} />} />
@@ -115,7 +117,7 @@ function App() {
         </BrowserRouter>
       </ContextData>
     </div>
-  );
+  )
 }
 
 

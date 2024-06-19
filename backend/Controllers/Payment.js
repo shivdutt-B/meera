@@ -2,6 +2,7 @@ const userController = require('../Controllers/User')
 const stripe = require("stripe")('sk_test_51No420SDdlneYxL6a3Ncg4WbLgDto2VClE7AEqXkf7Fo1vWX3V7buGBeZPERMUD4sL41nv3hcOfvJbYogAUrUkZG00dUfdvWcf')
 exports.payment = async (req, res) => {
     try {
+        console.log('make payjment',req.body)
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             mode: "payment",
@@ -12,7 +13,7 @@ exports.payment = async (req, res) => {
                         product_data: {
                             name: item.title,
                         },
-                        unit_amount: item.price * 100,
+                        unit_amount: (item.price) * 100,
                     },
                     quantity: item.count,
                 }

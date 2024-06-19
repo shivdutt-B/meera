@@ -3,6 +3,7 @@ import { showSearchBar } from "../Functions/NavbarFc"
 import { Link } from 'react-router-dom'
 import { ContextName } from '../Context/Context'
 import axios from "axios"
+import MeeraLogo from "../Assets/logo.png"
 
 function Navbar(props) {
     const [searchValue, setSearchValue] = useState('')
@@ -12,19 +13,20 @@ function Navbar(props) {
 
     const ContextItems = useContext(ContextName)
 
-    async function fetchProducts() {
-        const fetch = await axios("http://localhost:8080/auth")
-        if (fetch.data.user) {
-            ContextItems.setUser(fetch.data.user)
-            ContextItems.setCart(fetch.data.user.cart)
-            ContextItems.setBookedProducts(fetch.data.user.book)
-            ContextItems.setCartCount(fetch.data.user.cart.length)
-        }
-    }
+    // async function fetchProducts() {
+    //     const fetch = await axios("http://localhost:8080/auth")
+    //     if (fetch.data.user) {
+    //         console.log('HERE', fetch.data.user)
+    //         ContextItems.setUser(fetch.data.user)
+    //         ContextItems.setCart(fetch.data.user.cart)
+    //         ContextItems.setBookedProducts(fetch.data.user.book)
+    //         ContextItems.setCartCount(fetch.data.user.cart.length)
+    //     }
+    // }
 
-    useEffect(() => {
-        fetchProducts()
-    }, [])
+    // useEffect(() => {
+    //     fetchProducts()
+    // }, [])
 
     // useEffect(()=> {
     //     console.log('cart item changed',ContextItems.cartCount)
@@ -43,7 +45,10 @@ function Navbar(props) {
                 // props.user.length > 0 &&
                 <div className="nav">
                     <div className="nav-brand">
-                        <Link to="/">MIRA</Link>
+                        <Link to="/">
+                            MEERA
+                            <img src={MeeraLogo} ></img>
+                        </Link>
                     </div>
 
                     <div className="search-bar">
@@ -68,7 +73,6 @@ function Navbar(props) {
                         </div>
 
                         <div className="nav-start">
-                        {/* {console.log('my user',props.user)} */}
                             {
                                 Object.keys(ContextItems.user).length > 0 ?
                                     <Link to="/profile" className="nav-start-link nav-user-link">

@@ -52,7 +52,7 @@ const productSchema = new Schema({
     },
     count :{
         type:Number,
-        default:0
+        default:1
     }
 })
 

@@ -15,7 +15,6 @@ exports.Auth = async (req, res, next) => {
             const existingUser = await userModel.findOne({ _id: decodeToken.userId })
             console.log('USER', existingUser)
             if (existingUser) {
-                // req.user = existingUser
                 res.status(200).json({'user':existingUser})
             }
             else {
@@ -24,7 +23,6 @@ exports.Auth = async (req, res, next) => {
         }
         else {
             res.json({'user':false})
-            // next()
         }
 
     } catch (error) {

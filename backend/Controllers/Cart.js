@@ -94,7 +94,7 @@ exports.removeFromOrder = async (req, res) => {
         }
     }, { new: true })
     console.log('UPDATED DATA', updatedData)
-    res.status(200).json({ 'success': true })
+    res.status(200).json({ 'success': true , orders: updatedData})
 }
 
 exports.addToBook = async (req, res) => {
