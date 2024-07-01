@@ -32,11 +32,6 @@ const userSchema = new Schema({
     order:{
         type:Array
     },
-    book:{
-        type:Array
-    }
-    
-
 })
 
 exports.userModel = mongoose.model('user', userSchema)

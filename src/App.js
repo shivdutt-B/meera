@@ -27,6 +27,10 @@ import Booked from './Components/Booked';
 import DisplayProduct from './Components/DisplayProduct';
 import Loading from './Components/Loading';
 import TopLoadingBar from './Components/TopLoadingBar';
+import Footer from './Components/Footer';
+import SearchResult from './Components/SearchResult';
+import TestingComp from './Components/TestingComp';
+import PaymentFailed from './Components/PaymentFailed';
 // import Cancel from './Components/Cancel';
 
 
@@ -88,11 +92,6 @@ function App() {
   return (
     <div className="App">
       <ContextData>
-      {/* <LoadingBar
-          color='#FF5F00'
-          progress={ContextItems.progress}
-          height={4}
-        /> */}
         <TopLoadingBar />
         <BrowserRouter>
           <Navbar cartCount={cartCount} setCartCount={setCartCount} cart={cart} />
@@ -113,7 +112,11 @@ function App() {
             <Route path="/orders" element={<MyOrders setProgress={setProgress} />} />
             <Route path="/booked" element={<Booked bookedProducts={bookedProducts} setBookedProducts={setBookedProducts} setProgress={setProgress} />} />
             <Route exact path="/product/:id" element={<DisplayProduct setCartCount={setCartCount} setProgress={setProgress} setBookedProducts={setBookedProducts} bookedProducts={bookedProducts} />} />
+            <Route exact path="/search/:query" element={<SearchResult />} />
+            <Route exact path="/testing" element={<TestingComp />} />
+            <Route path="/failed" element={<PaymentFailed />} />
           </Routes>
+          <Footer/>
         </BrowserRouter>
       </ContextData>
     </div>

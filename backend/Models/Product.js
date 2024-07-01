@@ -53,6 +53,10 @@ const productSchema = new Schema({
     count :{
         type:Number,
         default:1
+    },
+    orderQnt: {
+        type:Number,
+        default: 1
     }
 })
 

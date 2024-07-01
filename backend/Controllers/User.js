@@ -25,10 +25,11 @@ exports.signIn = async (req, res, next) => {
             }
 
             else {
-                console.log('flag/3')
+                // console.log('flag/3')
                 const decryptPassword = await bcrypt.compare(password, existingUser.password)
                 if (decryptPassword) {
                     const token = await jwt.sign({ userId: existingUser._id }, 'shhhhh');
+
                     storage.setItem('token', token)
                     // console.log('item set:', storage.getItem('foo'))
                     res.status(200).json({ success: existingUser })
@@ -65,13 +66,13 @@ exports.signUp = async (req, res, next) => {
         if (username && email && password && mobile) {
 
             const existingUser = await userModel.findOne({ email: email })
-            console.log('Exisint', existingUser)
+            // console.log('Exisint', existingUser)
 
             if (existingUser) {
                 res.status(200).json({ success: false })
             }
             else {
-                console.log(req.body)
+                // console.log(req.body)
                 const user = await userModel(req.body)
                 const saltRounds = 10
                 const encryptedPassword = await bcrypt.hash(user.password, saltRounds)
@@ -94,12 +95,12 @@ exports.signUp = async (req, res, next) => {
 
 }
 
-exports.logOut = async (req, res, next) =>  {
+exports.logOut = async (req, res, next) => {
     res.status(200).json({})
     storage.setItem('token', '')
 }
 
-exports.deleteAccount = async (req, res, next) =>  {
+exports.deleteAccount = async (req, res, next) => {
     const user = req.body.user
     await userModel.findByIdAndDelete(user)
     storage.setItem('token', '')
@@ -109,19 +110,51 @@ exports.deleteAccount = async (req, res, next) =>  {
 exports.address = async (req, res, next) => {
     const address = req.body.address
     const token = await storage.getItem('token')
-    const decodeToken =  await jwt.verify(token, "shhhhh")
-    const response = await userModel.findByIdAndUpdate(decodeToken.userId, { $set: { address: address }},{new : true})
-    res.status(200).json(response)   
-}
-
-exports.addToOrders = async (data) => {
-    const token = await storage.getItem('token')
     const decodeToken = await jwt.verify(token, "shhhhh")
-    data.map(async (item) => {
-        const updatedData = await userModel.findByIdAndUpdate((decodeToken.userId), {
-            "$push": {
-                "order": item
+    const response = await userModel.findByIdAndUpdate(decodeToken.userId, { $set: { address: address } }, { new: true })
+    res.status(200).json(response)
+}
+async function updateUserOrders(user, incoming) {
+    incoming.forEach(incomingItem => {
+        const existingOrder = user.order.find(orderItem => orderItem.id == incomingItem.id);
+        if (existingOrder) {
+            existingOrder.orderQnt += incomingItem.orderQnt;
+        } else {
+            user.order.push(incomingItem);
+        }
+    });
+    await user.save()
+    return user;
+}
+exports.addToOrders = async (req, res) => {
+    try {
+        const token = await storage.getItem('token')
+        const data = req.body.data;
+
+        if (token) {
+            const decodeToken = await jwt.verify(token, "shhhhh")
+            if (decodeToken) {
+
+                const user = await userModel.findById(decodeToken.userId)
+
+                data.forEach(async incomingItem => {
+                    const existingOrder = user.order.find(orderItem => orderItem._id == incomingItem._id);
+
+                    if (existingOrder) {
+                        await userModel.findOneAndUpdate(
+                            { '_id': decodeToken.userId, 'order._id': incomingItem._id }, // Query condition
+                            { $inc: { 'order.$.orderQnt': incomingItem.orderQnt } }, // Update operation: $inc to increment orderQnt
+                            { new: true } // Options: return the updated document
+                        )
+                    } else {
+                        user.order.push(incomingItem);
+                    }
+                });
+                await user.save()
+                res.status(200).json({ success: true, updData: user })
             }
-        })
-    })
+        }
+    } catch (error) {
+        res.json({ "success": false })
     }
+}

@@ -22,7 +22,8 @@ const ContextData = (props) => {
     const [checkLoading, setCheckLoading] = useState(false)
     const [progress, setProgress] = useState(0)
     const [categoryData, setCategoryData] = useState({})
-
+    const [relatedProducts, setRelatedProducts] = useState([])
+    const [currentQuery, setCurrentQuery] = useState('')
 
     async function fetchProducts() {
         // setCheckLoading(true)
@@ -32,6 +33,7 @@ const ContextData = (props) => {
         }
         else {
             const fetch = await axios("http://localhost:8080/products")
+            // console.log('*** FETCHING PRODUCTS ***', fetch)
             let products = fetch.data.products
             setProducts(products)
         }
@@ -40,16 +42,8 @@ const ContextData = (props) => {
     }
 
     async function handleCartClick(e, element, user, navigate, setCartCount, setProgress, cart, setCart) {
+        console.log('CART CLICKED FROM CONTEXT', cart)
         if (Object.keys(user).length > 0) {
-            // const svg = e.target.closest('.add-to-cart').children[0]
-            // const svgPath = e.target.closest('.add-to-cart').children[0].children[2].children[0]
-            // setProgress(10)
-
-            // svg.style.transform = "scale(1.2)"
-
-            // setTimeout(() => {
-            //     svg.style.transform = "scale(1)"
-            // }, 250)
 
             setProgress(30)
 
@@ -57,20 +51,25 @@ const ContextData = (props) => {
                 return item._id == element._id
             })
 
+            console.log('CHECK IN CART', isItemInCart)
+
             if (isItemInCart) {
-                const removeFromCart = await axios.post('http://localhost:8080/removefromcart', element)
+                const removeFromCart = await axios.post('http://localhost:8080/removefromcart', { "_id": element._id })
+                console.log('code 239', removeFromCart)
                 if (removeFromCart.data.success) {
-                    setCartCount(removeFromCart.data.products.length)
-                    // setCart(removeFromCart.data.cartItems)
-                    // let products = cart.filter((item) => {item._id !== element._id})
-                    setCart(removeFromCart.data.products)
+                    setCartCount(removeFromCart.data.length)
+                    let products = cart.filter((item) => { return item._id != element._id })
+                    setCart(products)
+                    priceSetter(products, setCartCost)
+                    // setCart(removeFromCart.data.products)
                 }
             }
             else {
                 const addCart = await axios.post('http://localhost:8080/addtocart', element)
+                console.log('res 434', addCart)
                 if (addCart.data.success) {
-                    setCartCount(addCart.data.products.length)
-                    setCart(addCart.data.products)
+                    setCartCount(addCart.data.length)
+                    cart.push(element)
                 }
             }
 
@@ -84,19 +83,21 @@ const ContextData = (props) => {
         }
     }
 
-    async function deleteItem(element, setCartCount, setCount, setProgress, priceSetter) {
+    async function deleteItem(element, setCartCount, setProgress, priceSetter) {
         setProgress(10)
-        const addCart = await axios.post('http://localhost:8080/removefromcart', element)
-        setCartCount(addCart.data.length)
+        const removeFromCart = await axios.post('http://localhost:8080/removefromcart', { "_id": element._id })
+        // setCartCount(addCart.data.length)
         setProgress(30)
-        const a = cart.filter((item) => {
-            if (item._id != element._id) {
-                return item
-            }
-        })
+        // const a = cart.filter((item) => {
+        //     if (item._id != element._id) {
+        //         return item
+        //     }
+        // })
         setProgress(50)
-        setCart(a)
-        setCount(a.length)
+        setCartCount(removeFromCart.data.length)
+        let products = cart.filter((item) => { return item._id != element._id })
+        priceSetter(products, setCartCost)
+        setCart(products)
         setProgress(100)
 
     }
@@ -149,16 +150,15 @@ const ContextData = (props) => {
     async function TransferData(element, navigate) {
         const elementData = JSON.stringify(element)
         await sessionStorage.setItem('productInfo', elementData)
-        await sessionStorage.setItem('category', element.category)
-        // navigate(`/product/id=${element._id}`)
-        // navigate('/displayproduct')
+        await sessionStorage.setItem('productCategory', element.category)
+        // navigate(`/product/${element._id}`)
     }
 
     function priceSetter(data, parameter) {
         let cost = 0
-
+        // console.log('PARA', parameter)
         data.map((element) => {
-            cost += element.count * element.price
+            cost += element.count * (element.price * (1 - element.discountPercentage / 100)).toFixed(2)
         })
         parameter(cost)
     }
@@ -169,9 +169,9 @@ const ContextData = (props) => {
             // User is already present so no need to fetch again.
         }
         else {
-            console.log('time out ran')
             setCheckLoading(true)
             const fetch = await axios("http://localhost:8080/auth")
+            // console.log('*** FETCHING USER ***', fetch)
             setProgress(50)
             // Output: {user: user{}, products: product[]}
             if (fetch.data.user) {
@@ -193,14 +193,14 @@ const ContextData = (props) => {
 
 
     useEffect(() => {
-            fetchProducts()
-            fetchUser()
+        fetchProducts()
+        fetchUser()
     }, [])
 
 
     return (
         <ContextName.Provider value={{
-            cart, setCart, products, setProducts, user, setUser, fetchProducts, handleCartClick, deleteItem, toBeOrder, setToBeOrder, tempCart, setTempCart, cartOfOrders, setCartOfOrders, bookedProducts, setBookedProducts, handleBookClick, TransferData, cartCount, setCartCount, order, setOrder, cartCost, setCartCost, orderCost, setOrderCost, checkLoading, setCheckLoading, progress, setProgress, categoryData, setCategoryData
+            cart, setCart, products, setProducts, user, setUser, fetchProducts, handleCartClick, deleteItem, toBeOrder, setToBeOrder, tempCart, setTempCart, cartOfOrders, setCartOfOrders, bookedProducts, setBookedProducts, handleBookClick, TransferData, cartCount, setCartCount, order, setOrder, cartCost, setCartCost, orderCost, setOrderCost, checkLoading, setCheckLoading, progress, setProgress, categoryData, setCategoryData, relatedProducts, setRelatedProducts, priceSetter, currentQuery, setCurrentQuery
         }}>
             {props.children}
         </ContextName.Provider>

@@ -7,4 +7,5 @@ route.post('/signup', userController.signUp)
 route.get('/logout', userController.logOut)
 route.post('/delete', userController.deleteAccount)
 route.post('/address', userController.address)
+route.post('/addToOrder', userController.addToOrders)
 exports.userRouter = route     

@@ -9,7 +9,5 @@ route.post('/decreaseitem', cart.dItem)
 route.post('/increaseitem', cart.increaseItem)
 route.get('/order',cart.orders)
 route.post('/removefromorder',cart.removeFromOrder)
-route.post('/addtobook', cart.addToBook)
-route.post('/removefrombook', cart.removeFromBook)
 
 exports.cartRouter = route
