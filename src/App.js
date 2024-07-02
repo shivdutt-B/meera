@@ -33,19 +33,19 @@ function App() {
           <Routes>
             <Route path="" element={<Home />} />
             <Route path="/signin" element={<SignIn  />} />
-            <Route exact path="/signup" element={<SignUp />} />
-            <Route exact path="/profile" element={<Profile />} />
-            <Route exact path="/cart" element={<Cart />} />
-            <Route exact path="/address" element={<Address />} />
-            <Route exact path="/payment" element={<Payment />} />
-            <Route exact path="/summary" element={<Summary />} />
-            <Route exact path="/:products" element={<Products />} /> 
-            <Route exact path="/success" element={<PaymentSuccessfull />} />
-            <Route exact path="/orders" element={<MyOrders />} />
-            <Route exact path="/product/:id" element={<DisplayProduct />} />
-            <Route exact path="/search/:query" element={<SearchResult />} />
-            <Route exact path="/failed" element={<PaymentFailed />} />
-            <Route exact path="/error" element={<ErrorPage />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/address" element={<Address />} />
+            <Route path="/payment" element={<Payment />} />
+            <Route path="/summary" element={<Summary />} />
+            <Route path="/:products" element={<Products />} /> 
+            <Route path="/success" element={<PaymentSuccessfull />} />
+            <Route path="/orders" element={<MyOrders />} />
+            <Route path="/product/:id" element={<DisplayProduct />} />
+            <Route path="/search/:query" element={<SearchResult />} />
+            <Route path="/failed" element={<PaymentFailed />} />
+            <Route path="/error" element={<ErrorPage />} />
           </Routes>
           <Footer />
         </ContextData>
