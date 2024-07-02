@@ -691,10 +691,6 @@ body {
   font-weight: 550;
 }
 
-.user-status {
-  height: 24px;
-  color: red;
-}
 
 .sign form {
   display: flex;
@@ -1327,7 +1323,7 @@ body {
 
 .payment-success-text h2 {
   text-align: center;
-  font-weight: 600;
+  font-weight: 700;
   color: #272829;
   font-size: 28px;
   padding: 0 10px;
@@ -1349,8 +1345,8 @@ body {
   border-radius: 3px;
   font-size: 20px;
   background: none;
-  border: 2px solid #38d368;
-  color: #38d368;
+  border: 2px solid black;
+  color: black;
 }
 
 .no-item-in-cart-keep-shopping-btn {
@@ -1861,6 +1857,35 @@ body {
 
 .socials-container a:hover {
   color: rgba(0, 0, 0, 0.599);
+}
+.error-container, .no-search-results{
+  padding: 0 15px;
+  position: relative;
+}
+.error-container strong {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  color: #000000;
+  font-size: 24px;
+  text-align: center;
+  padding-right: 20px;
+}
+.no-search-results strong{
+  position:static;
+  width:100%;
+  text-align: center;
+  font-size:24px;
+  color:#000000;
+  display: block;
+
+}
+.error-container img, .no-search-results img{
+  max-width: 300px;
+    width: 100%;
+    margin: auto;
+    display: block;
+    mix-blend-mode: multiply;
 }
 
 @media screen and (max-width:400px) {

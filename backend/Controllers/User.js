@@ -9,44 +9,39 @@ const storage = require('node-sessionstorage')
 exports.signIn = async (req, res, next) => {
     try {
 
-        // console.log('flag2')
         const email = await req.body.email // Getting email from body.
         const password = await req.body.password // Getting password from.
-        // console.log('body', email, password)
 
         if (email && password) {
 
             const existingUser = await userModel.findOne({ email: email })
-            // console.log('EX',existingUser)
 
             if (!existingUser) {
-                // console.log('flaga')
-                res.status(200).json({ success: {} })
+                res.status(200).json({ success: false })
             }
 
             else {
-                // console.log('flag/3')
                 const decryptPassword = await bcrypt.compare(password, existingUser.password)
                 if (decryptPassword) {
                     const token = await jwt.sign({ userId: existingUser._id }, 'shhhhh');
 
                     storage.setItem('token', token)
-                    // console.log('item set:', storage.getItem('foo'))
-                    res.status(200).json({ success: existingUser })
+                    // res.status(200).json({ success: existingUser })
+                    res.status(200).json({success: true, user: existingUser})
 
                 }
                 else {
-                    res.status(200).json({ success: {} })
+                    res.status(200).json({ success: false })
                 }
             }
 
         }
         else {
-            res.json({ message: "All fields are necessary" })
+            res.json({ success: false})
         }
 
     } catch (error) {
-        console.log(error)
+        res.json({success: false})
     }
 
 }
@@ -55,42 +50,35 @@ exports.signIn = async (req, res, next) => {
 exports.signUp = async (req, res, next) => {
     try {
 
-        // const firstname = req.body.firstname
-        // const lastname = req.body.lastname
         const username = req.body.username // Getting username from body.
         const email = req.body.email // Getting email from body.
         const password = req.body.password // Getting password from body.
         const mobile = req.body.mobile
-        // const address = req.body.address
 
         if (username && email && password && mobile) {
 
             const existingUser = await userModel.findOne({ email: email })
-            // console.log('Exisint', existingUser)
 
             if (existingUser) {
                 res.status(200).json({ success: false })
             }
             else {
-                // console.log(req.body)
                 const user = await userModel(req.body)
-                const saltRounds = 10
-                const encryptedPassword = await bcrypt.hash(user.password, saltRounds)
+                const SALTROUNDS = 10
+                const encryptedPassword = await bcrypt.hash(user.password, SALTROUNDS)
                 user.password = encryptedPassword
                 await user.save()
-                // const token = await jwt.sign({ userId: user._id }, 'shhhhh');
-                // sessionStorage.setItem('token',token)
                 res.status(200).json({ success: true })
 
             }
 
         }
         else {
-            res.json({ message: "All fields are necessary" })
+            res.json({success: false})
         }
 
     } catch (error) {
-        console.log(error)
+        res.json({success: false})
     }
 
 }
@@ -100,32 +88,31 @@ exports.logOut = async (req, res, next) => {
     storage.setItem('token', '')
 }
 
-exports.deleteAccount = async (req, res, next) => {
-    const user = req.body.user
-    await userModel.findByIdAndDelete(user)
-    storage.setItem('token', '')
-    res.status(200).json({})
+exports.deleteAccount = async (req, res, next) => { // optionmization
+    try{
+        const user = req.body.user
+        await userModel.findByIdAndDelete(user)
+        storage.setItem('token', '')
+        res.status(200).json({success: true})
+    }
+    catch(error){
+        res.json({success: false})
+    }
 }
 
 exports.address = async (req, res, next) => {
-    const address = req.body.address
-    const token = await storage.getItem('token')
-    const decodeToken = await jwt.verify(token, "shhhhh")
-    const response = await userModel.findByIdAndUpdate(decodeToken.userId, { $set: { address: address } }, { new: true })
-    res.status(200).json(response)
+
+   try {
+     const address = req.body.address
+     const token = await storage.getItem('token')
+     const decodeToken = await jwt.verify(token, "shhhhh")
+     const response = await userModel.findByIdAndUpdate(decodeToken.userId, { $set: { address: address } }, { new: true })
+     res.status(200).json({success: true, response})
+   } catch (error) {
+    res.json({success: false})
+   }
 }
-async function updateUserOrders(user, incoming) {
-    incoming.forEach(incomingItem => {
-        const existingOrder = user.order.find(orderItem => orderItem.id == incomingItem.id);
-        if (existingOrder) {
-            existingOrder.orderQnt += incomingItem.orderQnt;
-        } else {
-            user.order.push(incomingItem);
-        }
-    });
-    await user.save()
-    return user;
-}
+
 exports.addToOrders = async (req, res) => {
     try {
         const token = await storage.getItem('token')

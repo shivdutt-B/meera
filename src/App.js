@@ -4,7 +4,7 @@ import Navbar from './Layouts/Navbar';
 import Home from './Components/Home';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import SignIn from './Components/Signin';
 import SignUp from './Components/Signup';
 import axios from "axios"
@@ -29,9 +29,8 @@ import Loading from './Components/Loading';
 import TopLoadingBar from './Components/TopLoadingBar';
 import Footer from './Components/Footer';
 import SearchResult from './Components/SearchResult';
-import TestingComp from './Components/TestingComp';
 import PaymentFailed from './Components/PaymentFailed';
-// import Cancel from './Components/Cancel';
+import ErrorPage from './Components/ErrorPage';
 
 
 function App() {
@@ -41,85 +40,42 @@ function App() {
   const [progress, setProgress] = useState(0)
   const [cart, setCart] = useState([])
   const [bookedProducts, setBookedProducts] = useState([])
+  const navigate = useNavigate()
 
-  // async function fetchProducts() {
-  //   const fetch = await axios("http://localhost:8080/auth")
-  //   console.log('fetch',fetch)
-  //   ContextItems.setUser(fetch.data.user)
-  //   ContextItems.setCart(fetch.data.user.cart)
-  // }
-
-  // useEffect(() => {
-  //   console.log('flag app')
-  //   fetchProducts()
-  // }, [])
-
-
-
-  // const ContextItems = useContext(ContextName)
-
-  async function fetchProducts() {
-    console.log('app.js')
-    const fetch = await axios("http://localhost:8080/auth")
-    // console.log("******************")
-
-    console.log('FETCH', fetch)
-    const user = fetch.data.user
-    const cart = fetch.data.user.cart
-    const book = fetch.data.user.book
-    // console.log('USER1: ' ,ContextItems.user , 'CART: ' ,ContextItems.cart , 'BOOK: ' ,ContextItems.bookedProducts)
-
-    // ContextItems.setUser(user)
-    if (fetch.data.user) {
-      const cartCount = fetch.data.user.cart.length
-      setUser(user)
-      setCartCount(cartCount)
-      setCart(fetch.data.user.cart)
-      // await ContextItems.setCart(ContextItems.cart.concat(cart))
-      await ContextItems.setBookedProducts(book)
-      await ContextItems.setCart(cart)
-      await ContextItems.setUser(fetch.data.user)
-      console.log('USER: ', ContextItems.user, 'CART: ', ContextItems.cart, 'BOOK: ', ContextItems.bookedProducts)
-    }
-
-  }
-
-  useEffect(() => {
-    // fetchProducts()
-    // console.log('app.js')
-  }, [])
 
   return (
-    <div className="App">
-      <ContextData>
-        <TopLoadingBar />
-        <BrowserRouter>
+    // <div className="App">
+    <>
+      <BrowserRouter>
+        <ContextData>
+          <TopLoadingBar />
           <Navbar cartCount={cartCount} setCartCount={setCartCount} cart={cart} />
           <Routes>
-            <Route path="/" element={<Home user={user} cartCount={cartCount} setCartCount={setCartCount} setProgress={setProgress} cart={cart} setCart={setCart} setBookedProducts={setBookedProducts} bookedProducts={bookedProducts} />} setProgress={setProgress} />
+            <Route exact path="/" element={<Home user={user} cartCount={cartCount} setCartCount={setCartCount} setProgress={setProgress} cart={cart} setCart={setCart} setBookedProducts={setBookedProducts} bookedProducts={bookedProducts} />} setProgress={setProgress} />
             <Route path="/signin" element={<SignIn setCartCount={setCartCount} cart={cart} setCart={setCart} setBookedProducts={setBookedProducts} />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/profile" element={<Profile setCartCount={setCartCount} setBookedProducts={setBookedProducts} />} />
-            {/* <Route path="/products" element={<Products cartCount={cartCount} setCartCount={setCartCount} setProgress={setProgress} />} /> */}
-            <Route path="/:products" element={<Products cartCount={cartCount} setCartCount={setCartCount} setProgress={setProgress} />} />
-            <Route path="/cart" element={<Cart setProgress={setProgress} setCartCount={setCartCount} />} />
-            <Route path="/address" element={<Address setProgress={setProgress} setCartCount={setCartCount} />} />
-            <Route path="/payment" element={<Payment setProgress={setProgress} setCartCount={setCartCount} />} />
-            <Route path="/summary" element={<Summary setProgress={setProgress} setCartCount={setCartCount} />} />
-            <Route path="/order" element={<Order setProgress={setProgress} setCartCount={setCartCount} />} />
-            <Route path="/product" element={<Product setProgress={setProgress} setCartCount={setCartCount} />} />
-            <Route path="/success" element={<PaymentSuccessfull />} />
-            <Route path="/orders" element={<MyOrders setProgress={setProgress} />} />
-            <Route path="/booked" element={<Booked bookedProducts={bookedProducts} setBookedProducts={setBookedProducts} setProgress={setProgress} />} />
+            <Route exact path="/signup" element={<SignUp />} />
+            <Route exact path="/profile" element={<Profile setCartCount={setCartCount} setBookedProducts={setBookedProducts} />} />
+            <Route exact path="/:products" element={<Products cartCount={cartCount} setCartCount={setCartCount} setProgress={setProgress} />} />
+            <Route exact path="/cart" element={<Cart setProgress={setProgress} setCartCount={setCartCount} />} />
+            <Route exact path="/address" element={<Address setProgress={setProgress} setCartCount={setCartCount} />} />
+            <Route exact path="/payment" element={<Payment setProgress={setProgress} setCartCount={setCartCount} />} />
+            <Route exact path="/summary" element={<Summary setProgress={setProgress} setCartCount={setCartCount} />} />
+            <Route exact path="/order" element={<Order setProgress={setProgress} setCartCount={setCartCount} />} />
+            <Route exact path="/product" element={<Product setProgress={setProgress} setCartCount={setCartCount} />} />
+            <Route exact path="/success" element={<PaymentSuccessfull />} />
+            <Route exact path="/orders" element={<MyOrders setProgress={setProgress} />} />
+            <Route exact path="/booked" element={<Booked bookedProducts={bookedProducts} setBookedProducts={setBookedProducts} setProgress={setProgress} />} />
             <Route exact path="/product/:id" element={<DisplayProduct setCartCount={setCartCount} setProgress={setProgress} setBookedProducts={setBookedProducts} bookedProducts={bookedProducts} />} />
             <Route exact path="/search/:query" element={<SearchResult />} />
-            <Route exact path="/testing" element={<TestingComp />} />
-            <Route path="/failed" element={<PaymentFailed />} />
+            <Route exact path="/failed" element={<PaymentFailed />} />
+            <Route exact path="/error" element={<ErrorPage />} />
+
           </Routes>
-          <Footer/>
-        </BrowserRouter>
-      </ContextData>
-    </div>
+          <Footer />
+        </ContextData>
+      </BrowserRouter>
+      </>
+    // </div>
   )
 }
 
