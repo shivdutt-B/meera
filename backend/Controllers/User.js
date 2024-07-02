@@ -1,9 +1,7 @@
 const jwt = require('jsonwebtoken')
 const model = require('../Models/User') // importing model file
 const userModel = model.userModel // importing model 
-const cookieParser = require('cookie-parser')
 const bcrypt = require('bcrypt')
-const express = require('express');
 const storage = require('node-sessionstorage')
 
 exports.signIn = async (req, res, next) => {
@@ -23,10 +21,9 @@ exports.signIn = async (req, res, next) => {
             else {
                 const decryptPassword = await bcrypt.compare(password, existingUser.password)
                 if (decryptPassword) {
-                    const token = await jwt.sign({ userId: existingUser._id }, 'shhhhh');
+                    const token = await jwt.sign({ userId: existingUser._id }, process.env.JWT_SECRET);
 
                     storage.setItem('token', token)
-                    // res.status(200).json({ success: existingUser })
                     res.status(200).json({success: true, user: existingUser})
 
                 }
@@ -88,7 +85,7 @@ exports.logOut = async (req, res, next) => {
     storage.setItem('token', '')
 }
 
-exports.deleteAccount = async (req, res, next) => { // optionmization
+exports.deleteAccount = async (req, res, next) => { 
     try{
         const user = req.body.user
         await userModel.findByIdAndDelete(user)
@@ -105,7 +102,7 @@ exports.address = async (req, res, next) => {
    try {
      const address = req.body.address
      const token = await storage.getItem('token')
-     const decodeToken = await jwt.verify(token, "shhhhh")
+     const decodeToken = await jwt.verify(token, process.env.JWT_SECRET)
      const response = await userModel.findByIdAndUpdate(decodeToken.userId, { $set: { address: address } }, { new: true })
      res.status(200).json({success: true, response})
    } catch (error) {
@@ -119,7 +116,7 @@ exports.addToOrders = async (req, res) => {
         const data = req.body.data;
 
         if (token) {
-            const decodeToken = await jwt.verify(token, "shhhhh")
+            const decodeToken = await jwt.verify(token, process.env.JWT_SECRET)
             if (decodeToken) {
 
                 const user = await userModel.findById(decodeToken.userId)

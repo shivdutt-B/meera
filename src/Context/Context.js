@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect, useContext } from 'react'
+import React, { useState, createContext, useEffect } from 'react'
 import axios from "axios"
 import { useNavigate } from 'react-router-dom'
 
@@ -36,11 +36,10 @@ const ContextData = (props) => {
                     setProducts(products)
                 }
                 else {
-                    console.log("ERROR")
                 }
             }
         } catch (error) {
-            // navigate('/error')
+            navigate('/error')
         }
     }
 
@@ -76,14 +75,14 @@ const ContextData = (props) => {
                 navigate('/signin')
             }
         } catch (error) {
-            // navigate('/error')
+            navigate('/error')
         }
         finally {
             setProgress(100)
         }
     }
 
-    async function deleteItem(element, setCartCount, setProgress, priceSetter) {
+    async function deleteItem(element, setCartCount, setProgress, priceSetter, navigate) {
         try {
             setProgress(10)
             const removeFromCart = await axios.post('http://localhost:8080/removefromcart', { "_id": element._id })
@@ -94,10 +93,10 @@ const ContextData = (props) => {
                 priceSetter(products, setCartCost)
                 setCart(products)
             } else {
-                // navigate('/error')
+                navigate('/error')
             }
         } catch (error) {
-            // navigate('/error')
+            navigate('/error')
         }
         finally {
             setProgress(100)
@@ -111,7 +110,7 @@ const ContextData = (props) => {
             await sessionStorage.setItem('productInfo', elementData)
             await sessionStorage.setItem('productCategory', element.category)
         } catch (error) {
-            // navigate('/error')
+            navigate('/error')
         }
     }
 
@@ -146,13 +145,16 @@ const ContextData = (props) => {
                     priceSetter(fetch.data.user.order, setOrderCost) // calculating total price of all the items in order.
                     setCheckLoading(false)
                 }
+                else{
+                    // Not signed so no user is present.
+                }
             }
         } catch (error) {
             navigate('/error')
         }
-        // finally {
-        //     setProgress(100)
-        // }
+        finally {
+            setProgress(100)
+        }
     }
 
 

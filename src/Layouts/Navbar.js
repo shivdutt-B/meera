@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { showSearchBar } from "../Functions/NavbarFc"
+import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { ContextName } from '../Context/Context'
-import axios from "axios"
 import MeeraLogo from "../Assets/logo.png"
 import { useNavigate } from 'react-router-dom'
 
-function Navbar(props) {
+function Navbar() {
     const [searchValue, setSearchValue] = useState('')
     const [loading, setLoading] = useState(true)
     const [cartCount, setCartCount] = useState(0)
@@ -15,33 +13,10 @@ function Navbar(props) {
 
     const ContextItems = useContext(ContextName)
 
-    // async function fetchProducts() {
-    //     const fetch = await axios("http://localhost:8080/auth")
-    //     if (fetch.data.user) {
-    //         console.log('HERE', fetch.data.user)
-    //         ContextItems.setUser(fetch.data.user)
-    //         ContextItems.setCart(fetch.data.user.cart)
-    //         ContextItems.setBookedProducts(fetch.data.user.book)
-    //         ContextItems.setCartCount(fetch.data.user.cart.length)
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     fetchProducts()
-    // }, [])
-
-    // useEffect(()=> {
-    //     console.log('cart item changed',ContextItems.cartCount)
-    // },[ContextItems.cartCount])
-
     async function handleSubmit(e) {
-        console.log('submitted')
         e.preventDefault()
-        // e.target.reset();
         await sessionStorage.setItem('query', searchValue)
         ContextItems.setCurrentQuery(searchValue)
-        console.log('code 2', searchValue)
-        console.log('FORM IS SUBMITTED')
         navigate(`/search/${searchValue}`)
     }
 
@@ -55,7 +30,6 @@ function Navbar(props) {
     return (
         <>
             {
-                // props.user.length > 0 &&
                 <div className="nav">
                     <div className="nav-brand">
                         <Link to="/">
