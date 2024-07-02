@@ -6,9 +6,6 @@ import { useNavigate } from 'react-router-dom'
 
 function Navbar() {
     const [searchValue, setSearchValue] = useState('')
-    const [loading, setLoading] = useState(true)
-    const [cartCount, setCartCount] = useState(0)
-    const [user, setUser] = useState({})
     const navigate = useNavigate();
 
     const ContextItems = useContext(ContextName)
