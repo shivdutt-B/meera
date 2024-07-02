@@ -8,7 +8,6 @@ import EmptyCart from "../Assets/empth-cart.png"
 
 function Cart() {
   const ContextItems = useContext(ContextName)
-  // const [count, setCount] = useState([])
   const navigate = useNavigate()
 
   async function increaseItem(e, element) {
