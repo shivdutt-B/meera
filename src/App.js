@@ -13,7 +13,6 @@ import Cart from './Components/Cart';
 import Address from './Components/Address';
 import Payment from './Components/Payment';
 import Summary from './Components/Summary';
-import ProductView from "./Components/ProductView"
 import PaymentSuccessfull from './Components/PaymentSuccessfull';
 import MyOrders from './Components/MyOrders';
 import DisplayProduct from './Components/DisplayProduct';
@@ -40,8 +39,7 @@ function App() {
             <Route exact path="/address" element={<Address />} />
             <Route exact path="/payment" element={<Payment />} />
             <Route exact path="/summary" element={<Summary />} />
-            <Route exact path="/:products" element={<Products />} />
-            <Route exact path="/product" element={<ProductView />} />
+            <Route exact path="/:products" element={<Products />} /> 
             <Route exact path="/success" element={<PaymentSuccessfull />} />
             <Route exact path="/orders" element={<MyOrders />} />
             <Route exact path="/product/:id" element={<DisplayProduct />} />
