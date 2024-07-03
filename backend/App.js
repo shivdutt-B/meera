@@ -43,7 +43,9 @@ server.use(productRoute.productRoute)
 server.use(cartRouter.cartRouter)
 server.use(paymentRouter.paymentRouter)
 
-
+server.get('/', (req, res) => {
+  res.send('Hello World!')
+})
 
 
 //Connecting to db
