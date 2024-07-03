@@ -31,7 +31,7 @@ const ContextData = (props) => {
             }
             else {
                 // const fetch = await axios("http://localhost:8080/products")
-                const fetch = await axios('https://meera-mocha.vercel.app/products')
+                const fetch = await axios('https://meera-gamma.vercel.app/products')
                 if (fetch.data.success) {
                     let products = fetch.data.products
                     setProducts(products)
@@ -132,7 +132,7 @@ const ContextData = (props) => {
             else {
                 setCheckLoading(true)
                 // const fetch = await axios("http://localhost:8080/auth")
-                const fetch = await axios('https://meera-mocha.vercel.app/auth')
+                const fetch = await axios('https://meera-gamma.vercel.app/auth')
                 setProgress(50)
                 if (fetch.data.user) {
                     //Setting all the information from user
