@@ -31,6 +31,9 @@ server.use(bodyParser.json({
 }))
 
 // Middlewares and routers
+const corsOptions = {
+  origin: 'https://meera-6tkl.vercel.app', // Allow only this origin
+};
 server.use(cors())
 server.use(express.json())
 server.use(cookieParser())
