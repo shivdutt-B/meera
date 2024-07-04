@@ -31,7 +31,8 @@ const ContextData = (props) => {
             }
             else {
                 console.log('HII', process.env.REACT_APP_BACKEND_BASE_URL)
-                const fetch = await axios(`${process.env.REACT_APP_BACKEND_BASE_URL}/products`)
+                // const fetch = await axios(`${process.env.REACT_APP_BACKEND_BASE_URL}/products`)
+                const fetch = await axios(`https://meera-api.onrender.com/products`)
                 if (fetch.data.success) {
                     let products = fetch.data.products
                     setProducts(products)
