@@ -29,7 +29,7 @@ function SignIn() {
         try {
             ContextItems.setProgress(10)
             e.preventDefault()
-            const postData = await axios.post("http://localhost:8080/signup", data)
+            const postData = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/signup`, data)
             ContextItems.setProgress(50)
             if (postData.data.success) {
                 navigate('/signin')

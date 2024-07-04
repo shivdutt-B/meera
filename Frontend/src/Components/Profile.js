@@ -15,7 +15,7 @@ function Profile() {
             ContextItems.setOrder([])
             ContextItems.setBookedProducts([])
             ContextItems.setCartCount(0)
-            await axios("http://localhost:8080/logout")
+            await axios(`${process.env.REACT_APP_BACKEND_BASE_URL}/logout`)
             navigate('/')
         } catch (error) {
             navigate('/error')
@@ -33,7 +33,7 @@ function Profile() {
             ContextItems.setCart([])
             ContextItems.setBookedProducts([])
             ContextItems.setCartCount(0)
-            const resp = await axios.post("http://localhost:8080/delete", { user: user })
+            const resp = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/delete`, { user: user })
             ContextItems.setProgress(50)
             if (resp.data.success) {
                 navigate('/')

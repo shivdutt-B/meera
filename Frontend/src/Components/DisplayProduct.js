@@ -16,7 +16,7 @@ function DisplayProduct() {
   async function fetchByCategory() {
     try {
       const category = await sessionStorage.getItem("productCategory");
-      const fetch = await axios.post(`http://localhost:8080/category`, { category: category })
+      const fetch = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/category`, { category: category })
       if (fetch.data.success){
         await ContextItems.setRelatedProducts(fetch.data.products)
       }

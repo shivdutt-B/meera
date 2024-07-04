@@ -17,7 +17,7 @@ function Payment() {
                 itemsToOrder,
                 userId
             }
-            const payment = await fetch('http://localhost:8080/create-checkout-session', {
+            const payment = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/create-checkout-session`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

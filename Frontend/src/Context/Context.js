@@ -30,8 +30,8 @@ const ContextData = (props) => {
 
             }
             else {
-                // const fetch = await axios("http://localhost:8080/products")
-                const fetch = await axios('https://meera-gamma.vercel.app/products')
+                console.log('HII', process.env.REACT_APP_BACKEND_BASE_URL)
+                const fetch = await axios(`${process.env.REACT_APP_BACKEND_BASE_URL}/products`)
                 if (fetch.data.success) {
                     let products = fetch.data.products
                     setProducts(products)
@@ -55,7 +55,7 @@ const ContextData = (props) => {
                 })
 
                 if (isItemInCart) {
-                    const removeFromCart = await axios.post('http://localhost:8080/removefromcart', { "_id": element._id })
+                    const removeFromCart = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/removefromcart`, { "_id": element._id })
                     if (removeFromCart.data.success) {
                         setCartCount(removeFromCart.data.length)
                         let products = cart.filter((item) => { return item._id != element._id })
@@ -64,7 +64,7 @@ const ContextData = (props) => {
                     }
                 }
                 else {
-                    const addCart = await axios.post('http://localhost:8080/addtocart', element)
+                    const addCart = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/addtocart`, element)
                     if (addCart.data.success) {
                         setCartCount(addCart.data.length)
                         cart.push(element)
@@ -86,7 +86,7 @@ const ContextData = (props) => {
     async function deleteItem(element, setCartCount, setProgress, priceSetter, navigate) {
         try {
             setProgress(10)
-            const removeFromCart = await axios.post('http://localhost:8080/removefromcart', { "_id": element._id })
+            const removeFromCart = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/removefromcart`, { "_id": element._id })
             setProgress(50)
             if (removeFromCart.data.success) {
                 setCartCount(removeFromCart.data.length)
@@ -131,8 +131,7 @@ const ContextData = (props) => {
             }
             else {
                 setCheckLoading(true)
-                // const fetch = await axios("http://localhost:8080/auth")
-                const fetch = await axios('https://meera-gamma.vercel.app/auth')
+                const fetch = await axios(`${process.env.REACT_APP_BACKEND_BASE_URL}/auth`)
                 setProgress(50)
                 if (fetch.data.user) {
                     //Setting all the information from user

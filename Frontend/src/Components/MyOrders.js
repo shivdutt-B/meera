@@ -13,7 +13,7 @@ function MyOrders() {
     try {
       ContextItems.setProgress(10)
       const productId = element._id
-      const deletedItem = await axios.post('http://localhost:8080/removefromorder', { productId: productId }) // deleted from db
+      const deletedItem = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/removefromorder`, { productId: productId }) // deleted from db
       if (deletedItem.data.success) {
         const products = ContextItems.order.filter((item) => {
           return item._id != element._id

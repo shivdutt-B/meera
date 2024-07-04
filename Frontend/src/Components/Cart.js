@@ -13,7 +13,7 @@ function Cart() {
   async function increaseItem(e, element) {
     try {
       ContextItems.setProgress(0)
-      const response = await axios.post(`http://localhost:8080/increaseitem`, { productId: element._id })
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/increaseitem`, { productId: element._id })
       if (response.data.success) {
         ContextItems.setProgress(50)
 
@@ -55,7 +55,7 @@ function Cart() {
         ContextItems.handleCartClick(e, element, ContextItems.user, navigate, ContextItems.setCartCount, ContextItems.setProgress, ContextItems.cart, ContextItems.setCart)
       }
       else {
-        const response = await axios.post(`http://localhost:8080/decreaseitem`, { productId: element._id })
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/decreaseitem`, { productId: element._id })
         if (response.data.success) {
 
           count.innerHTML = Number(count.innerHTML) - 1

@@ -22,6 +22,13 @@ import SearchResult from './Components/SearchResult';
 import PaymentFailed from './Components/PaymentFailed';
 import ErrorPage from './Components/ErrorPage';
 
+// TODO:
+// Push meera (frontend and backend) on github without node modules and probable package-json
+// Host backend on render.
+// Change url in frontend
+// Host frontend on vercel.
+// update url in backend's payment.
+
 
 function App() {
   return (

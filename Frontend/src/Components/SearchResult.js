@@ -15,7 +15,7 @@ function SearchResult() {
             ContextItems.setProgress(10)
             setLoading(true)
             const query = await sessionStorage.getItem('query')
-            const searchResults = await fetch("http://localhost:8080/product/search", {
+            const searchResults = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/search`, {
                 method: 'POST', // Specify the request method
                 headers: {
                     'Content-Type': 'application/json' // Specify the content type if you're sending JSON
