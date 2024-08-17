@@ -3,7 +3,6 @@ const productModel = require('../Models/Product')
 exports.showAll = async (req, res) => {
     try {
         const products = await productModel.productModel.find()
-        console.log('HII')
         res.json({ success: true, 'products': products })
     } catch (error) {
         res.json({ success: false })

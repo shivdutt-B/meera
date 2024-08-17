@@ -23,11 +23,9 @@ import PaymentFailed from './Components/PaymentFailed';
 import ErrorPage from './Components/ErrorPage';
 
 // TODO:
-// Push meera (frontend and backend) on github without node modules and probable package-json
-// Host backend on render.
-// Change url in frontend
-// Host frontend on vercel.
-// update url in backend's payment.
+// CUSTOM MESSAGE FOR USER SIGNIN AND SIGNUP STATUS.
+// IF ANY ERROR OCCURS THEN SUCCESS SHOULD BE ERROR OTHERWISE IT SHOULD BE FALSE AND A CUSTOM MESSAGE.
+
 
 
 function App() {

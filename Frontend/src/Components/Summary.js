@@ -66,16 +66,17 @@ function Summary() {
                         </div>
                         <div className="cart-item-count summary-price-count-container">
                           <div className="summary-item-price-container">
-                            <i class="fa-solid fa-indian-rupee-sign"></i> {(Number(element.price) - ((Number(element.price) * Number(element.discountPercentage ? element.discountPercentage : 0)) / 100)).toFixed(2)}
+                            <i class="fas fa-dollar-sign"></i> 
+                            {(Number(element.price) - ((Number(element.price) * Number(element.discountPercentage ? element.discountPercentage : 0)) / 100)).toFixed(2)}
                           </div>
                           <div className="count-plus">
-                            <span className="cart-item-count-span">{JSON.parse(sessionStorage.getItem('toBeOrder')).map((item) => { if (item._id == element._id) { return `x${item.orderQnt}` } })}</span>
+                            <span className="cart-item-count-span">{JSON.parse(sessionStorage.getItem('toBeOrder')).map((item) => { if (item._id == element._id) { return `x${item.count}` } })}</span>
                           </div>
                         </div>
 
                         <div className="cart-item-price">
                           <div>
-                            <i class="fa-solid fa-indian-rupee-sign"></i><span className="cart-item-price-span">{(element.count * (element.price * (1 - element.discountPercentage / 100))).toFixed(2)}</span>
+                            <i class="fas fa-dollar-sign"></i><span className="cart-item-price-span">{(element.count * (element.price * (1 - element.discountPercentage / 100))).toFixed(2)}</span>
                           </div>
                         </div>
                       </div>
@@ -92,7 +93,7 @@ function Summary() {
                   <h4>Subtotal</h4>
                 </div>
                 <div className="sub-total-head">
-                  <i class="fa-solid fa-indian-rupee-sign"></i>{cost.toFixed(2)}
+                  <i class="fas fa-dollar-sign"></i>{cost.toFixed(2)}
                 </div>
               </div>
               <div className="cart-item-border-bottom summary-border"></div>

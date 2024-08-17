@@ -13,8 +13,19 @@ function MyOrders() {
     try {
       ContextItems.setProgress(10)
       const productId = element._id
-      const deletedItem = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/removefromorder`, { productId: productId }) // deleted from db
-      if (deletedItem.data.success) {
+      const token = await sessionStorage.getItem('token')
+      // const deletedItem = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/removefromorder`, { productId: productId }) 
+      const deletedItem = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/removefromorder`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }, 
+        body: JSON.stringify({productId: productId})
+        
+      })
+      let parsedDeletedItem = await deletedItem.json() 
+      if (parsedDeletedItem.success) {
         const products = ContextItems.order.filter((item) => {
           return item._id != element._id
         })
@@ -36,8 +47,9 @@ function MyOrders() {
 
   return (
     <div className="main">
+      {console.log('orer ber', ContextItems.order)}
       <div className="gutter">
-        {
+        { 
           ContextItems.order.length > 0 ?
             <div className="cart-summary-container">
               <div className="cart">
@@ -54,10 +66,10 @@ function MyOrders() {
                           </div>
                           <div className="cart-item-name-small order-item-name-small">
                             <h3 className="cart-item-name-name">{element.title.length > 30 ? element.title.slice(0, 20) + '...' : element.title}</h3>
-                            <div className="cart-item-order-count-small">x{element.orderQnt}</div>
+                            <div className="cart-item-order-count-small">x{element.count}</div>
                           </div>
                           <div className="cart-item-order-count">
-                            x{element.orderQnt}
+                            x{element.count}
                           </div>
                           <div className="cancel-order">
                             <div className="cancel-order-button">
@@ -81,7 +93,7 @@ function MyOrders() {
                     <h4>Subtotal</h4>
                   </div>
                   <div className="sub-total-head">
-                    <i class="fa-solid fa-indian-rupee-sign"></i>
+                    <i class="fas fa-dollar-sign"></i>
                     {ContextItems.orderCost.toFixed(2)}
                   </div>
                 </div>

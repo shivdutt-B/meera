@@ -9,6 +9,7 @@ import { useContext } from 'react';
 
 function SignIn() {
     const [data, setData] = useState({})
+    const [userStatus, setUserStatus] = useState('')
     const navigate = useNavigate()
     const ContextItems = useContext(ContextName)
     const [inputType, setInputType] = useState("password")
@@ -30,17 +31,30 @@ function SignIn() {
         try {
             e.preventDefault()
             ContextItems.setProgress(10)
-            const postData = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/signin`, data)
+            // const postData = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/signin`, data)
+            const postData = await fetch(`http://localhost:8080/signin`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'Application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            const postDataParsed = await postData.json()
+            console.log('c2', postDataParsed)
             ContextItems.setProgress(50)
-            if (postData.data.success){
-                ContextItems.setUser(postData.data.user)
-                ContextItems.setCart(postData.data.user.cart)
-                ContextItems.setOrder(postData.data.user.order)
-                ContextItems.setCartCount(postData.data.user.cart.length)
+            if (postDataParsed.success) {
+                ContextItems.setUser(postDataParsed.user)
+                ContextItems.setCart(postDataParsed.user.cart)
+                ContextItems.setOrder(postDataParsed.user.order)
+                ContextItems.setCartCount(postDataParsed.user.cart.length)
+                await sessionStorage.setItem('token', postDataParsed.token)
                 navigate('/')
             }
-            else{
-                navigate('/error')
+            else {
+                setUserStatus(postDataParsed.message)
+                setTimeout(() => {
+                    setUserStatus()
+                }, 4000)
             }
         } catch (error) {
             navigate('/error')
@@ -59,6 +73,7 @@ function SignIn() {
             <div className="sign">
                 <h1>Sign in</h1>
                 <p>Continue with <span>MEERA</span></p>
+                <p style={{height: '20px', color:'red'}}>{userStatus}</p>
                 <form action="" className="sign-form" onSubmit={handleSubmit}>
 
                     <input id="email" type="email" placeholder="Email" name="email" className="email-input" required onChange={(e) => { handleChange(e) }} />

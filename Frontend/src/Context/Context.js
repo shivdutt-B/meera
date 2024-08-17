@@ -9,7 +9,7 @@ const ContextData = (props) => {
     const navigate = useNavigate()
     const [cart, setCart] = useState([])
     const [products, setProducts] = useState([])
-    const [user, setUser] = useState({})
+    const [user, setUser] = useState(false)
     const [toBeOrder, setToBeOrder] = useState({})
     const [tempCart, setTempCart] = useState([])
     const [cartOfOrders, setCartOfOrders] = useState({})
@@ -31,8 +31,7 @@ const ContextData = (props) => {
             }
             else {
                 console.log('HII', process.env.REACT_APP_BACKEND_BASE_URL)
-                // const fetch = await axios(`${process.env.REACT_APP_BACKEND_BASE_URL}/products`)
-                const fetch = await axios(`https://meera-api.onrender.com/products`)
+                const fetch = await axios(`${process.env.REACT_APP_BACKEND_BASE_URL}/products`)
                 if (fetch.data.success) {
                     let products = fetch.data.products
                     setProducts(products)
@@ -47,29 +46,56 @@ const ContextData = (props) => {
 
     async function handleCartClick(e, element, user, navigate, setCartCount, setProgress, cart, setCart) {
         try {
+            console.log('CLICKED ')
             if (Object.keys(user).length > 0) {
 
                 setProgress(30)
+
+                const token = await sessionStorage.getItem('token')
 
                 const isItemInCart = cart.some((item) => {
                     return item._id == element._id
                 })
 
                 if (isItemInCart) {
-                    const removeFromCart = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/removefromcart`, { "_id": element._id })
-                    if (removeFromCart.data.success) {
-                        setCartCount(removeFromCart.data.length)
+
+                    const removeFromCart = await fetch('http://localhost:8080/removefromcart', {
+                        method: 'POST', 
+                        headers: {
+                            'Authorization': `Bearer ${token}`, 
+                            'Content-Type': 'application/json',
+                        }, 
+                        body: JSON.stringify({ "_id": element._id })
+                    })
+                    const parsedRemoveFromCart = await removeFromCart.json()
+                    if (parsedRemoveFromCart.success) {
+                        setCartCount(parsedRemoveFromCart.length)
                         let products = cart.filter((item) => { return item._id != element._id })
                         setCart(products)
                         priceSetter(products, setCartCost)
                     }
                 }
                 else {
-                    const addCart = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/addtocart`, element)
-                    if (addCart.data.success) {
-                        setCartCount(addCart.data.length)
+                    console.log('ADD THIS ITEM: ', element)
+                    const addToCart = await fetch('http://localhost:8080/addToCart', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`, // Include JWT in the Authorization header
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ element })
+                    })
+                    const addToCartParsed = await addToCart.json()
+                    console.log('Code 88', addToCartParsed)
+                    if (addToCartParsed.success) {
+                        setCartCount(addToCartParsed.length)
                         cart.push(element)
                     }
+                    // const addCart = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/addtocart`, element)
+                    // if (addCart.data.success) {
+                    //     setCartCount(addCart.data.length)
+                    //     cart.push(element)
+                    // }
                 }
             }
 
@@ -77,7 +103,7 @@ const ContextData = (props) => {
                 navigate('/signin')
             }
         } catch (error) {
-            navigate('/error')
+            // navigate('/error')
         }
         finally {
             setProgress(100)
@@ -87,10 +113,19 @@ const ContextData = (props) => {
     async function deleteItem(element, setCartCount, setProgress, priceSetter, navigate) {
         try {
             setProgress(10)
-            const removeFromCart = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/removefromcart`, { "_id": element._id })
+            const token = sessionStorage.getItem('token')
+            const removeFromCart = await fetch('http://localhost:8080/removefromcart', {
+                method: 'POST', 
+                headers: {
+                    'Authorization': `Bearer ${token}`, 
+                    'Content-Type': 'application/json',
+                }, 
+                body: JSON.stringify({ "_id": element._id })
+            })
+            const parsedRemoveFromCart = await removeFromCart.json()
             setProgress(50)
-            if (removeFromCart.data.success) {
-                setCartCount(removeFromCart.data.length)
+            if (parsedRemoveFromCart.success) {
+                setCartCount(parsedRemoveFromCart.length)
                 let products = cart.filter((item) => { return item._id != element._id })
                 priceSetter(products, setCartCost)
                 setCart(products)
@@ -126,32 +161,49 @@ const ContextData = (props) => {
 
     async function fetchUser() {
         setProgress(10)
+        console.log('HII THERE')
         try {
             if (Object.keys(user).length > 0) {
                 // User is already present so no need to fetch again.
             }
             else {
+                // User is not there in the state so need to fetch it.
                 setCheckLoading(true)
-                const fetch = await axios(`${process.env.REACT_APP_BACKEND_BASE_URL}/auth`)
-                setProgress(50)
-                if (fetch.data.user) {
-                    //Setting all the information from user
-                    setUser(fetch.data.user)
-                    setCart(fetch.data.user.cart)
-                    setOrder(fetch.data.user.order)
-                    setBookedProducts(fetch.data.user.book)
-                    setCartCount(fetch.data.user.cart.length)
+                const token = await sessionStorage.getItem('token')
+                if (token) {
+                    // We have signed in atleast once during the session so we have have the token in the session storage. The token can be used to fetch users information.
+                    // const fetch = await axios(`${process.env.REACT_APP_BACKEND_BASE_URL}/auth`)
+                    const fetchUser = await fetch(`http://localhost:8080/auth`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                    const parsedFetch = await fetchUser.json()
+                    console.log('CODE 1', parsedFetch)
+                    setProgress(50)
+                    if (parsedFetch.user) {
+                        // Setting all the information from user
+                        setUser(parsedFetch.user)
+                        setCart(parsedFetch.user.cart)
+                        setOrder(parsedFetch.user.order)
+                        setBookedProducts(parsedFetch.user.book)
+                        setCartCount(parsedFetch.user.cart.length)
 
-                    // Setting all the prices (cart, order)
-                    priceSetter(fetch.data.user.cart, setCartCost) // calculating total price of all the items in cart.
-                    priceSetter(fetch.data.user.order, setOrderCost) // calculating total price of all the items in order.
-                    setCheckLoading(false)
+                        // Setting all the prices (cart, order)
+                        priceSetter(parsedFetch.user.cart, setCartCost) // calculating total price of all the items in cart.
+                        priceSetter(parsedFetch.user.order, setOrderCost) // calculating total price of all the items in order.
+                        setCheckLoading(false)
+                    }
+
                 }
-                else{
-                    // Not signed so no user is present.
+                else {
+                    // User didn't sign in during the whole session so we don't have the token.
                 }
             }
         } catch (error) {
+            console.log('HEELOO', error)
             navigate('/error')
         }
         finally {

@@ -17,10 +17,10 @@ function DisplayProduct() {
     try {
       const category = await sessionStorage.getItem("productCategory");
       const fetch = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/category`, { category: category })
-      if (fetch.data.success){
+      if (fetch.data.success) {
         await ContextItems.setRelatedProducts(fetch.data.products)
       }
-      else{
+      else {
         navigate('/error')
       }
     } catch (error) {
@@ -78,14 +78,14 @@ function DisplayProduct() {
   function setImageAndBorder(event, image) {
     try {
       let currentElement = event.target.closest('.display-product-small-image')
-  
+
       // Setting image to display (big).
       setPosterToDisplay(image)
-  
+
       // Remove border from all other images by remove the class which will also take out the styles.
       let allImages = Object.values(document.querySelector(".display-product-images").children)
       allImages.map((element) => element.classList.remove('active-small-image'))
-  
+
       // Adding the class to the image which is clicked. The class will apply the styles.
       currentElement.classList.add('active-small-image')
     } catch (error) {
@@ -96,8 +96,9 @@ function DisplayProduct() {
 
   function setToBeOrder(element) {
     try {
-      if (Object.keys(ContextItems.user).length > 0) {
-        element.orderQnt = orderQnt
+      if (ContextItems.user) {
+        // element.orderQnt = orderQnt
+        element.count = orderQnt;
         sessionStorage.setItem('toBeOrder', JSON.stringify([element]))
         navigate('/summary')
       } else {
@@ -110,8 +111,9 @@ function DisplayProduct() {
 
   const handleOrderQnt = (event) => {
     try {
+      console.log('clicked')
       const value = event.target.value;
-      if (value >= 0) {
+      if (value >= 0 && value <= 10) {
         setOrderQnt(value);
       }
     } catch (error) {
@@ -122,12 +124,14 @@ function DisplayProduct() {
   function incDecItem(e) {
     try {
       const element = e.target.closest(".order-qnt-controller")
-      if (element.getAttribute('data-qntController') == "plus") {
-        setOrderQnt(orderQnt + 1)
-      }
-      else {
-        if (!(orderQnt == 1)) {
-          setOrderQnt(orderQnt - 1)
+      if (orderQnt <= 9) {
+        if (element.getAttribute('data-qntController') == "plus") {
+          setOrderQnt(orderQnt + 1)
+        }
+        else {
+          if (!(orderQnt == 1)) {
+            setOrderQnt(orderQnt - 1)
+          }
         }
       }
     } catch (error) {
@@ -163,7 +167,7 @@ function DisplayProduct() {
               <div className="display-product-order-qnt-container">
                 <div className="order-qnt-controller" data-qntController="plus" onClick={(e) => { incDecItem(e) }}><i className="fas fa-plus" ></i></div>
                 <div>
-                  <input className="display-product-order-qnt-input" type="number" min="1" value={orderQnt} onChange={(e) => { handleOrderQnt(e) }}></input>
+                  <input className="display-product-order-qnt-input" type="number" min="1" max="10" value={orderQnt} onChange={(e) => { handleOrderQnt(e) }}></input>
                 </div>
                 <div className="order-qnt-controller" data-qntController="minus" onClick={(e) => { incDecItem(e) }}><i className="fas fa-minus"></i></div>
               </div>
@@ -174,7 +178,7 @@ function DisplayProduct() {
                 }) ?
                   <div onClick={(e) => { ContextItems.handleCartClick(e, productInfo, ContextItems.user, navigate, ContextItems.setCartCount, ContextItems.setProgress, ContextItems.cart, ContextItems.setCart) }} className="display-product-cart"><i class="fa-solid fa-cart-shopping"></i> Uncart</div>
                   :
-                  <div onClick={(e) => { ContextItems.handleCartClick(e, productInfo, ContextItems.user, navigate, ContextItems.setCartCount, ContextItems.setProgress, ContextItems.cart, ContextItems.setCart) }} className="display-product-cart"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</div>
+                  <div onClick={(e) => { productInfo.count = orderQnt; ContextItems.handleCartClick(e, productInfo, ContextItems.user, navigate, ContextItems.setCartCount, ContextItems.setProgress, ContextItems.cart, ContextItems.setCart) }} className="display-product-cart"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</div>
               }
             </div>
           </div>
@@ -198,9 +202,12 @@ function DisplayProduct() {
             </div>
             <div className='display-product-pricing'>
               <div className="display-product-price-after-discount">
-                <i class="fa-solid fa-indian-rupee-sign"></i>
-                {Math.floor(productInfo.price - (productInfo.discountPercentage * productInfo.price) / 100)}</div>
-              <div className="display-product-price-before-discount"><i class="fa-solid fa-indian-rupee-sign"></i>{productInfo.price}</div>
+                <i class="fas fa-dollar-sign"></i>
+                {/* {Math.floor(productInfo.price - (productInfo.discountPercentage * productInfo.price) / 100)} */}
+                {(Number(productInfo.price) - ((Number(productInfo.price) * Number(productInfo.discountPercentage ? productInfo.
+                  discountPercentage : 0)) / 100)).toFixed(2)}
+              </div>
+              <div className="display-product-price-before-discount"><i class="fas fa-dollar-sign"></i>{productInfo.price}</div>
               <div className="display-product-price-discount">{productInfo.discountPercentage}% off</div>
             </div>
             <div className="display-product-stock">
@@ -213,10 +220,15 @@ function DisplayProduct() {
               <span className="display-product-category-span display-product-heading-key">Category: </span> {productInfo.category}
             </div>
             <div className="display-product-delivery-address">
-              <span className="display-product-delivery-address-span display-product-heading-key">Address: </span> {ContextItems.user.address ? ContextItems.user.address :
-                <>
-                  <Link to="/address">Enter address</Link>
-                </>}
+              <span className="display-product-delivery-address-span display-product-heading-key">Address: </span>
+              {
+                ContextItems.user ?
+                  ContextItems.user.address ? ContextItems.user.address : <Link to="/address">Enter Address</Link>
+                  :
+                  <>
+                    --
+                  </>
+              }
             </div>
             <div className="display-product-shipping">
               <span className="display-product-shipping-span display-product-heading-key">Shipping: </span> {productInfo.shippingInformation}
@@ -303,7 +315,7 @@ function DisplayProduct() {
               <div className="display-product-order-qnt-container">
                 <div className="order-qnt-controller" data-qntController="plus" onClick={(e) => { incDecItem(e) }}><i className="fas fa-plus" ></i></div>
                 <div>
-                  <input className="display-product-order-qnt-input" type="number" min="1" value={orderQnt} onChange={(e) => { handleOrderQnt(e) }}></input>
+                  <input className="display-product-order-qnt-input" type="number" min="1" max="10" value={orderQnt} onChange={(e) => { handleOrderQnt(e) }}></input>
                 </div>
                 <div className="order-qnt-controller" data-qntController="minus" onClick={(e) => { incDecItem(e) }}><i className="fas fa-minus"></i></div>
               </div>
@@ -338,9 +350,9 @@ function DisplayProduct() {
               </div>
               <div className='display-product-pricing display-product-pricing-small'>
                 <div className="display-product-price-after-discount">
-                  <i class="fa-solid fa-indian-rupee-sign"></i>
+                  <i class="fas fa-dollar-sign"></i>
                   {Math.floor(productInfo.price - (productInfo.discountPercentage * productInfo.price) / 100)}</div>
-                <div className="display-product-price-before-discount"><i class="fa-solid fa-indian-rupee-sign"></i>{productInfo.price}</div>
+                <div className="display-product-price-before-discount"><i class="fas fa-dollar-sign"></i>{productInfo.price}</div>
                 <div className="display-product-price-discount">{productInfo.discountPercentage}% off</div>
               </div>
               <div className="display-product-stock">
@@ -353,10 +365,15 @@ function DisplayProduct() {
                 <span className="display-product-category-span display-product-heading-key">Category: </span> {productInfo.category}
               </div>
               <div className="display-product-delivery-address">
-                <span className="display-product-delivery-address-span display-product-heading-key">Address: </span> {ContextItems.user.address ? ContextItems.user.address :
-                  <>
-                    <Link to="/address">Enter address</Link>
-                  </>}
+                <span className="display-product-delivery-address-span display-product-heading-key">Address: </span>
+                {
+                  ContextItems.user ?
+                    ContextItems.user.address ? ContextItems.user.address : <Link to="/address">Enter Address</Link>
+                    :
+                    <>
+                      --
+                    </>
+                }
               </div>
               <div className="display-product-shipping">
                 <span className="display-product-shipping-span display-product-heading-key">Shipping: </span> {productInfo.shippingInformation}
@@ -450,8 +467,8 @@ function DisplayProduct() {
                         <div className="product-rating-container"><i class="fa-solid fa-star"></i>{element.rating}</div>
                         <div className="product-price-detail">
                           <div className="original-discount-price-container">
-                            <div className="discount-price"><i class="fa-solid fa-indian-rupee-sign"></i>{(Number(element.price) - ((Number(element.price) * Number(element.discountPercentage ? element.discountPercentage : 0)) / 100)).toFixed(2)}</div>
-                            <div className="original-price"><i class="fa-solid fa-indian-rupee-sign"></i>{element.price}</div>
+                            <div className="discount-price"><i class="fas fa-dollar-sign"></i>{(Number(element.price) - ((Number(element.price) * Number(element.discountPercentage ? element.discountPercentage : 0)) / 100)).toFixed(2)}</div>
+                            <div className="original-price"><i class="fas fa-dollar-sign"></i>{element.price}</div>
                           </div>
                           <div className="discount">{element.discountPercentage ? element.discountPercentage : 0}%off</div>
                         </div>

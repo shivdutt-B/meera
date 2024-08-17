@@ -112,7 +112,7 @@ function Products() {
                         <div className="product-container-item-price product-price-detail">
                           <div className="original-discount-price-container">
                             <div className="discount-price">
-                              <i class="fa-solid fa-indian-rupee-sign"></i>{
+                              <i class="fas fa-dollar-sign"></i>{
                                 element.discountPercentage ?
                                   Number(element.discountPercentage) == 0 ?
                                     element.price
@@ -127,7 +127,7 @@ function Products() {
                                 Number(element.discountPercentage) == 0 ?
                                   <div className="original-price"></div>
                                   :
-                                  <div className="original-price"><i class="fa-solid fa-indian-rupee-sign"></i>{element.price}</div>
+                                  <div className="original-price"><i class="fas fa-dollar-sign"></i>{element.price}</div>
                                 :
                                 <div className="original-price"></div>
                             }

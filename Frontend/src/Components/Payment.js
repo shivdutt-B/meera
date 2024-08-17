@@ -10,24 +10,36 @@ function Payment() {
 
     async function payment() {
         try {
+            console.log('code 1')
             ContextItems.setProgress(10)
+            const token = sessionStorage.getItem('token')
             let itemsToOrder = JSON.parse(sessionStorage.getItem('toBeOrder'))
-            let userId = ContextItems.user._id
+            let modItems = itemsToOrder.map(item => {
+                return {
+                    _id: item._id,
+                    title: item.title,
+                    price:
+                        parseFloat((Number(item.price) - ((Number(item.price) * Number(item.discountPercentage ? item.discountPercentage : 0)) / 100)).toFixed(2)),
+                    count: parseInt(item.count)
+                }
+            })
             const payLoad = {
-                itemsToOrder,
-                userId
+                modItems
             }
             const payment = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/create-checkout-session`, {
                 method: 'POST',
                 headers: {
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(payLoad)
             })
             const parsedPayment = await payment.json()
+            console.log('PARSED: ', parsedPayment)
             window.location = parsedPayment.url
         } catch (error) {
-            navigate('/error')
+            console.log('ERROR: ', error)
+            // navigate('/error')
         } finally {
             ContextItems.setProgress(100)
         }

@@ -315,8 +315,8 @@ function Home() {
                               <div className="product-rating-container"><i class="fa-solid fa-star"></i>{element.rating}</div>
                               <div className="product-price-detail">
                                 <div className="original-discount-price-container">
-                                  <div className="discount-price"><i class="fa-solid fa-indian-rupee-sign"></i>{(Number(element.price) - ((Number(element.price) * Number(element.discountPercentage ? element.discountPercentage : 0)) / 100)).toFixed(2)}</div>
-                                  <div className="original-price"><i class="fa-solid fa-indian-rupee-sign"></i>{element.price}</div>
+                                  <div className="discount-price"><i class="fas fa-dollar-sign"></i>{(Number(element.price) - ((Number(element.price) * Number(element.discountPercentage ? element.discountPercentage : 0)) / 100)).toFixed(2)}</div>
+                                  <div className="original-price"><i class="fas fa-dollar-sign"></i>{element.price}</div>
                                 </div>
                                 <div className="discount">{element.discountPercentage ? element.discountPercentage : 0}%off</div>
                               </div>
@@ -374,8 +374,8 @@ function Home() {
                               <div className="product-rating-container"><i class="fa-solid fa-star"></i>{element.rating}</div>
                               <div className="product-price-detail">
                                 <div className="original-discount-price-container">
-                                  <div className="discount-price"><i class="fa-solid fa-indian-rupee-sign"></i>{(Number(element.price) - ((Number(element.price) * Number(element.discountPercentage ? element.discountPercentage : 0)) / 100)).toFixed(2)}</div>
-                                  <div className="original-price"><i class="fa-solid fa-indian-rupee-sign"></i>{element.price}</div>
+                                  <div className="discount-price"><i class="fas fa-dollar-sign"></i>{(Number(element.price) - ((Number(element.price) * Number(element.discountPercentage ? element.discountPercentage : 0)) / 100)).toFixed(2)}</div>
+                                  <div className="original-price"><i class="fas fa-dollar-sign"></i>{element.price}</div>
                                 </div>
                                 <div className="discount">{element.discountPercentage ? element.discountPercentage : 0}%off</div>
                               </div>
@@ -433,8 +433,8 @@ function Home() {
                               <div className="product-rating-container"><i class="fa-solid fa-star"></i>{element.rating}</div>
                               <div className="product-price-detail">
                                 <div className="original-discount-price-container">
-                                  <div className="discount-price"><i class="fa-solid fa-indian-rupee-sign"></i>{(Number(element.price) - ((Number(element.price) * Number(element.discountPercentage ? element.discountPercentage : 0)) / 100)).toFixed(2)}</div>
-                                  <div className="original-price"><i class="fa-solid fa-indian-rupee-sign"></i>{element.price}</div>
+                                  <div className="discount-price"><i class="fas fa-dollar-sign"></i>{(Number(element.price) - ((Number(element.price) * Number(element.discountPercentage ? element.discountPercentage : 0)) / 100)).toFixed(2)}</div>
+                                  <div className="original-price"><i class="fas fa-dollar-sign"></i>{element.price}</div>
                                 </div>
                                 <div className="discount">{element.discountPercentage ? element.discountPercentage : 0}%off</div>
                               </div>

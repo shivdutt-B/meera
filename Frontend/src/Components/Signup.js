@@ -11,6 +11,7 @@ function SignIn() {
     const [data, setData] = useState({})
     const ContextItems = useContext(ContextName)
     const [inputType, setInputType] = useState("password")
+    const [userStatus, setUserStatus] = useState('')
 
     function showAndHidePass() {
         const openEye = document.getElementById('open-eye')
@@ -29,13 +30,25 @@ function SignIn() {
         try {
             ContextItems.setProgress(10)
             e.preventDefault()
-            const postData = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/signup`, data)
+            // const postData = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/signup`, data)
+            const signUp = await fetch(`http://localhost:8080/signup`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            const signUpParsed = await signUp.json()
+
             ContextItems.setProgress(50)
-            if (postData.data.success) {
+            if (signUpParsed.success) {
                 navigate('/signin')
             }
             else {
-                navigate('/error')
+                setUserStatus(signUpParsed.message)
+                setTimeout(() => {
+                    setUserStatus()
+                }, 4000)
             }
         } catch (error) {
             navigate('/error')
@@ -61,6 +74,7 @@ function SignIn() {
                         <div>User already exits try using another email</div>
                     }
                 </div>
+                <p style={{height: '20px', color:'red'}}>{userStatus}</p>
                 <form action="" className="sign-form" onSubmit={handleSubmit}>
 
                     <input id="username" type="input" placeholder="User Name" name="username" className="username-input" required onChange={(e) => { handleChange(e) }} />

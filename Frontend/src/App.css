@@ -772,6 +772,7 @@ body {
   border: 1px solid grey;
   background-color: #F7F7F7;
   padding: 10px;
+  border-radius: 4px;
 }
 
 .product-item:hover .item-desc-title {
@@ -1979,6 +1980,9 @@ body {
     width: calc(100vw / 4);
     margin: 0px 10px 0 0;
   }
+  .j-s-m-w-f-first>a:last-child {
+    margin:0;
+  }
 
   .j-s-m-w-f-first>a:last-child {
     margin-left: 0;
@@ -1993,11 +1997,11 @@ body {
 
   .j-s-m-w-f-first {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: repeat(1fr,2);
   }
 
   .j-s-m-w-f-first>a {
-    width: calc(100vw / 2);
+    width: 100%;
     margin: 10px 10px 0 0;
   }
 

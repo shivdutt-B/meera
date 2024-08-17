@@ -10,12 +10,12 @@ function Profile() {
     async function logOut() {
         try {
             ContextItems.setProgress(10)
-            ContextItems.setUser({})
+            ContextItems.setUser(false)
             ContextItems.setCart([])
             ContextItems.setOrder([])
             ContextItems.setBookedProducts([])
             ContextItems.setCartCount(0)
-            await axios(`${process.env.REACT_APP_BACKEND_BASE_URL}/logout`)
+            await sessionStorage.removeItem('token')
             navigate('/')
         } catch (error) {
             navigate('/error')
@@ -28,20 +28,32 @@ function Profile() {
     async function deleteAccount() {
         try {
             ContextItems.setProgress(10)
+            const token = sessionStorage.getItem('token')
             const user = ContextItems.user._id
             ContextItems.setUser({})
             ContextItems.setCart([])
             ContextItems.setBookedProducts([])
             ContextItems.setCartCount(0)
-            const resp = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/delete`, { user: user })
+            // const resp = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/delete`, { user: user })
+            const deleteUser = await fetch(`http://localhost:8080/delete`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'Application/json',
+                },
+                body: JSON.stringify({ user: user })
+            })
             ContextItems.setProgress(50)
-            if (resp.data.success) {
+            const deleteUserParsed = await deleteUser.json()
+            if (deleteUserParsed.success) {
+                await sessionStorage.removeItem('token')
                 navigate('/')
             }
             else {
                 navigate('/error')
             }
         } catch (error) {
+            console.log('C', error)
             navigate('/error')
         }
         finally {
@@ -52,7 +64,7 @@ function Profile() {
     return (
         <>
             {
-                Object.keys(ContextItems.user).length > 0 &&
+                ContextItems.user &&
                 <div className="profile-super-container">
                     <div className="profile-container">
                         <div className="profile-picture">

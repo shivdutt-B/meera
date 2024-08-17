@@ -13,11 +13,23 @@ function SignIn() {
 
     async function handleSubmit(e) {
         try {
+            console.log('HIII')
             e.preventDefault()
             ContextItems.setProgress(10)
-            const postData = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/address`, data)
-            if (postData.data.success) {
-                ContextItems.setUser(postData.data.response)
+            const token = await sessionStorage.getItem('token')
+            const postData = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/address`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Include JWT in the Authorization header
+                    'Content-Type': 'application/json'
+                }, 
+                body: JSON.stringify(data)
+            })
+            const postDataParsed = await postData.json()
+            console.log(postDataParsed)
+            if (postDataParsed.success) {
+                console.log('DATA: ', data)
+                ContextItems.user.address = data.address
                 navigate('/')
             }
             else {

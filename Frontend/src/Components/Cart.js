@@ -8,17 +8,27 @@ import EmptyCart from "../Assets/empth-cart.png"
 
 function Cart() {
   const ContextItems = useContext(ContextName)
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   async function increaseItem(e, element) {
     try {
       ContextItems.setProgress(0)
-      const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/increaseitem`, { productId: element._id })
-      if (response.data.success) {
+      const token = await sessionStorage.getItem('token')
+      // const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/increaseitem`, { productId: element._id })
+      const response = await fetch(`http://localhost:8080/increaseitem`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ productId: element._id })
+      })
+      const parsedResponse = await response.json()
+      if (parsedResponse.success) {
         ContextItems.setProgress(50)
 
         let price = e.target.closest('.cart-item').querySelector('.cart-item-price-span')
-        let count = e.target.parentElement.children[1]
+        let count = e.target.parentElement.children[1];
 
         count.innerHTML = Number(count.innerHTML) + 1
         price.innerHTML = ((element.price * (1 - element.discountPercentage / 100)) * Number(count.innerHTML)).toFixed(2)
@@ -38,7 +48,7 @@ function Cart() {
     } catch (error) {
       navigate('/error')
     }
-    finally{
+    finally {
       ContextItems.setProgress(100)
     }
   }
@@ -46,7 +56,9 @@ function Cart() {
   async function decreaseItem(e, element) {
     try {
       ContextItems.setProgress(0)
-      ContextItems.setProgress(50)
+      ContextItems.setProgress(50);
+
+      const token = sessionStorage.getItem('token')
 
       let price = e.target.closest('.cart-item').querySelector('.cart-item-price-span')
       let count = e.target.parentElement.children[1]
@@ -55,8 +67,19 @@ function Cart() {
         ContextItems.handleCartClick(e, element, ContextItems.user, navigate, ContextItems.setCartCount, ContextItems.setProgress, ContextItems.cart, ContextItems.setCart)
       }
       else {
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/decreaseitem`, { productId: element._id })
-        if (response.data.success) {
+        // const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/decreaseitem`, { productId: element._id })
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/decreaseitem`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ "_id": element._id })
+        })
+
+        const parsedResponse = await response.json()
+
+        if (parsedResponse.success) {
 
           count.innerHTML = Number(count.innerHTML) - 1
           price.innerHTML = ((element.price * (1 - element.discountPercentage / 100)) * Number(count.innerHTML)).toFixed(2)
@@ -79,7 +102,7 @@ function Cart() {
     } catch (error) {
       navigate('/error')
     }
-    finally{
+    finally {
       ContextItems.setProgress(100)
     }
   }
@@ -88,6 +111,7 @@ function Cart() {
 
   function setToBeOrder() {
     try {
+
       if (ContextItems.cart.length > 0) {
         ContextItems.cart.map((item) => {
           item.orderQnt = item.count
@@ -101,7 +125,7 @@ function Cart() {
     } catch (error) {
       navigate('/error')
     }
-    finally{
+    finally {
       ContextItems.setProgress(100)
     }
   }
@@ -137,18 +161,21 @@ function Cart() {
                               <i className="fas fa-minus count-i" onClick={(e) => { decreaseItem(e, element) }}></i>
                             </div>
                             <div className="cart-item-price-small">
-                              <i class="fa-solid fa-indian-rupee-sign"></i><span className="cart-item-price-span">{(element.price * element.count * (1 - element.discountPercentage * element.count / 100)).toFixed(2)}</span>
+                              <i class="fas fa-dollar-sign"></i>
+                              <span>
+                                {(element.count * (element.price * (1 - element.discountPercentage / 100)).toFixed(2)).toFixed(2)}
+                              </span>
                             </div>
                           </div>
 
                           <div className="cart-item-price">
                             <div>
-                              <i class="fa-solid fa-indian-rupee-sign"></i>
+                              <i class="fas fa-dollar-sign"></i>
                               <span className="cart-item-price-span">{(element.count * (element.price * (1 - element.discountPercentage / 100)).toFixed(2)).toFixed(2)}</span>
                             </div>
                           </div>
                           <div className="cart-item-remove-container">
-                            <div className="cart-item-remove">
+                            <div className="cart-item-remove"> 
                               <i class="fa-regular fa-trash-can" onClick={(e) => { ContextItems.deleteItem(element, ContextItems.setCartCount, ContextItems.setProgress, ContextItems.priceSetter, navigate) }}></i>
                             </div>
                             <div className="cart-item-remove-small" onClick={(e) => { ContextItems.deleteItem(element, ContextItems.setCartCount, ContextItems.setProgress, ContextItems.priceSetter, navigate) }}>
@@ -169,7 +196,7 @@ function Cart() {
                     <h4>Subtotal</h4>
                   </div>
                   <div className="sub-total-head">
-                  <i class="fa-solid fa-indian-rupee-sign"></i> {ContextItems.cartCost.toFixed(2)}
+                    <i class="fas fa-dollar-sign"></i> {ContextItems.cartCost.toFixed(2)}
                   </div>
                 </div>
                 <div className="cart-item-border-bottom summary-border"></div>
