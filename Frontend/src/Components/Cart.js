@@ -15,7 +15,7 @@ function Cart() {
       ContextItems.setProgress(0)
       const token = await sessionStorage.getItem('token')
       // const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/increaseitem`, { productId: element._id })
-      const response = await fetch(`http://localhost:8080/increaseitem`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/increaseitem`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

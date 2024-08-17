@@ -31,7 +31,7 @@ function SignIn() {
             ContextItems.setProgress(10)
             e.preventDefault()
             // const postData = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/signup`, data)
-            const signUp = await fetch(`http://localhost:8080/signup`, {
+            const signUp = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

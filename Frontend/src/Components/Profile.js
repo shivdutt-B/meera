@@ -35,7 +35,7 @@ function Profile() {
             ContextItems.setBookedProducts([])
             ContextItems.setCartCount(0)
             // const resp = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/delete`, { user: user })
-            const deleteUser = await fetch(`http://localhost:8080/delete`, {
+            const deleteUser = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/delete`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

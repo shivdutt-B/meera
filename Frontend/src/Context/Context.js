@@ -30,7 +30,6 @@ const ContextData = (props) => {
 
             }
             else {
-                console.log('HII', process.env.REACT_APP_BACKEND_BASE_URL)
                 const fetch = await axios(`${process.env.REACT_APP_BACKEND_BASE_URL}/products`)
                 if (fetch.data.success) {
                     let products = fetch.data.products
@@ -59,7 +58,7 @@ const ContextData = (props) => {
 
                 if (isItemInCart) {
 
-                    const removeFromCart = await fetch('http://localhost:8080/removefromcart', {
+                    const removeFromCart = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/removefromcart`, {
                         method: 'POST', 
                         headers: {
                             'Authorization': `Bearer ${token}`, 
@@ -77,7 +76,7 @@ const ContextData = (props) => {
                 }
                 else {
                     console.log('ADD THIS ITEM: ', element)
-                    const addToCart = await fetch('http://localhost:8080/addToCart', {
+                    const addToCart = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/addToCart`, {
                         method: 'POST',
                         headers: {
                             'Authorization': `Bearer ${token}`, // Include JWT in the Authorization header
@@ -114,7 +113,7 @@ const ContextData = (props) => {
         try {
             setProgress(10)
             const token = sessionStorage.getItem('token')
-            const removeFromCart = await fetch('http://localhost:8080/removefromcart', {
+            const removeFromCart = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/removefromcart`, {
                 method: 'POST', 
                 headers: {
                     'Authorization': `Bearer ${token}`, 
@@ -173,7 +172,7 @@ const ContextData = (props) => {
                 if (token) {
                     // We have signed in atleast once during the session so we have have the token in the session storage. The token can be used to fetch users information.
                     // const fetch = await axios(`${process.env.REACT_APP_BACKEND_BASE_URL}/auth`)
-                    const fetchUser = await fetch(`http://localhost:8080/auth`, {
+                    const fetchUser = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/auth`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',

@@ -15,8 +15,13 @@ require('dotenv').config()
 // Create server
 const server = express()
 
+// Setting up frontend url
+const corsOptions = {
+  origin: 'https://meera-kohl.vercel.app/', // Replace with the URL you want to allow
+};
+
 //Middleware
-server.use(cors())
+server.use(cors(corsOptions))
 server.use(express.json())
 server.use(cookieParser())
 server.use(userRoute.userRouter)
