@@ -9,11 +9,19 @@ const AuthRouter = require('./Routes/Auth')
 const cartRouter = require('./Routes/Cart')
 const paymentRouter = require('./Routes/Payment')
 require('dotenv').config()
+const bodyParser = require('body-parser')
 
 
 
 // Create server
 const server = express()
+
+server.use(bodyParser.urlencoded({ extended: false }))
+server.use(bodyParser.json({
+  verify: (req, res, buf) => {
+    req.rawBody = buf
+  }
+}))
 
 // Setting up frontend url
 const corsOptions = {
