@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext} from 'react'
 
 // Category Poster
 import grocery from "../Assets/grocery.jpg"
@@ -14,7 +14,6 @@ import cosmatics from "../Assets/cosmatics.png"
 import { Link } from 'react-router-dom'
 import Slider from "react-slick";
 
-import axios from "axios"
 import { useNavigate } from 'react-router-dom'
 
 //Banners
@@ -91,11 +90,6 @@ function Home() {
     let category = await e.target.closest('[data-category]').dataset.category
     await sessionStorage.setItem('category', category)
   }
-
-  // async function transferSingleProductCategory(e) {
-  //   let category = await e.target.closest('[date-category]').dataset.category
-  //   await sessionStorage.setItems('singleCategory', category)
-  // }
 
 
   return (

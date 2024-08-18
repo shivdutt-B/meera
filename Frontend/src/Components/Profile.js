@@ -1,6 +1,5 @@
 import React, { useContext} from 'react'
 import { ContextName } from '../Context/Context'
-import axios from 'axios'
 import { useNavigate, Link } from 'react-router-dom'
 
 function Profile() {
@@ -34,7 +33,6 @@ function Profile() {
             ContextItems.setCart([])
             ContextItems.setBookedProducts([])
             ContextItems.setCartCount(0)
-            // const resp = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/delete`, { user: user })
             const deleteUser = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/delete`, {
                 method: 'POST',
                 headers: {
@@ -53,7 +51,6 @@ function Profile() {
                 navigate('/error')
             }
         } catch (error) {
-            console.log('C', error)
             navigate('/error')
         }
         finally {

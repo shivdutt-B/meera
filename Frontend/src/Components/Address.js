@@ -1,6 +1,5 @@
 import React from 'react'
 import { useState } from 'react'
-import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import { ContextName } from '../Context/Context';
 import { useContext } from 'react';
@@ -13,7 +12,6 @@ function SignIn() {
 
     async function handleSubmit(e) {
         try {
-            console.log('HIII')
             e.preventDefault()
             ContextItems.setProgress(10)
             const token = await sessionStorage.getItem('token')
@@ -26,9 +24,7 @@ function SignIn() {
                 body: JSON.stringify(data)
             })
             const postDataParsed = await postData.json()
-            console.log(postDataParsed)
             if (postDataParsed.success) {
-                console.log('DATA: ', data)
                 ContextItems.user.address = data.address
                 navigate('/')
             }

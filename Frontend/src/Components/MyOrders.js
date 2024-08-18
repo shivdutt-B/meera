@@ -1,5 +1,4 @@
-import axios from 'axios'
-import React, {  useState } from 'react'
+import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ContextName } from '../Context/Context'
 import { useContext } from 'react'
@@ -14,7 +13,6 @@ function MyOrders() {
       ContextItems.setProgress(10)
       const productId = element._id
       const token = await sessionStorage.getItem('token')
-      // const deletedItem = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/removefromorder`, { productId: productId }) 
       const deletedItem = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/removefromorder`, {
         method: 'POST',
         headers: {
@@ -47,7 +45,6 @@ function MyOrders() {
 
   return (
     <div className="main">
-      {console.log('orer ber', ContextItems.order)}
       <div className="gutter">
         { 
           ContextItems.order.length > 0 ?

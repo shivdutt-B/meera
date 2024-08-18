@@ -10,7 +10,6 @@ function Payment() {
 
     async function payment() {
         try {
-            console.log('code 1')
             ContextItems.setProgress(10)
             const token = sessionStorage.getItem('token')
             let itemsToOrder = JSON.parse(sessionStorage.getItem('toBeOrder'))
@@ -35,11 +34,9 @@ function Payment() {
                 body: JSON.stringify(payLoad)
             })
             const parsedPayment = await payment.json()
-            console.log('PARSED: ', parsedPayment)
             window.location = parsedPayment.url
         } catch (error) {
-            console.log('ERROR: ', error)
-            // navigate('/error')
+            navigate('/error')
         } finally {
             ContextItems.setProgress(100)
         }

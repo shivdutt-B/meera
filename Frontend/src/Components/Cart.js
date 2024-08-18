@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import React, { useEffect} from 'react'
 import { useContext } from 'react'
 import { ContextName } from '../Context/Context'
 import { Link } from 'react-router-dom'
@@ -14,7 +13,6 @@ function Cart() {
     try {
       ContextItems.setProgress(0)
       const token = await sessionStorage.getItem('token')
-      // const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/increaseitem`, { productId: element._id })
       const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/increaseitem`, {
         method: 'POST',
         headers: {
@@ -67,7 +65,6 @@ function Cart() {
         ContextItems.handleCartClick(e, element, ContextItems.user, navigate, ContextItems.setCartCount, ContextItems.setProgress, ContextItems.cart, ContextItems.setCart)
       }
       else {
-        // const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/decreaseitem`, { productId: element._id })
         const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/decreaseitem`, {
           method: 'POST',
           headers: {
@@ -97,7 +94,6 @@ function Cart() {
         else {
           navigate('/error')
         }
-        // NEED TO UPDATE THE CONTEXT DATA OF THE CART.
       }
     } catch (error) {
       navigate('/error')

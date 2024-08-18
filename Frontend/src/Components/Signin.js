@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from "react-router-dom"
 import { useState } from 'react'
-import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import { ContextName } from '../Context/Context';
 import { useContext } from 'react';
@@ -31,7 +30,6 @@ function SignIn() {
         try {
             e.preventDefault()
             ContextItems.setProgress(10)
-            // const postData = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/signin`, data)
             const postData = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/signin`, {
                 method: 'POST',
                 headers: {
@@ -40,7 +38,6 @@ function SignIn() {
                 body: JSON.stringify(data)
             })
             const postDataParsed = await postData.json()
-            console.log('c2', postDataParsed)
             ContextItems.setProgress(50)
             if (postDataParsed.success) {
                 ContextItems.setUser(postDataParsed.user)

@@ -79,7 +79,6 @@ function DisplayProduct() {
     try {
       let currentElement = event.target.closest('.display-product-small-image')
 
-      // Setting image to display (big).
       setPosterToDisplay(image)
 
       // Remove border from all other images by remove the class which will also take out the styles.
@@ -97,7 +96,6 @@ function DisplayProduct() {
   function setToBeOrder(element) {
     try {
       if (ContextItems.user) {
-        // element.orderQnt = orderQnt
         element.count = orderQnt;
         sessionStorage.setItem('toBeOrder', JSON.stringify([element]))
         navigate('/summary')
@@ -111,7 +109,6 @@ function DisplayProduct() {
 
   const handleOrderQnt = (event) => {
     try {
-      console.log('clicked')
       const value = event.target.value;
       if (value >= 0 && value <= 10) {
         setOrderQnt(value);
@@ -203,7 +200,6 @@ function DisplayProduct() {
             <div className='display-product-pricing'>
               <div className="display-product-price-after-discount">
                 <i class="fas fa-dollar-sign"></i>
-                {/* {Math.floor(productInfo.price - (productInfo.discountPercentage * productInfo.price) / 100)} */}
                 {(Number(productInfo.price) - ((Number(productInfo.price) * Number(productInfo.discountPercentage ? productInfo.
                   discountPercentage : 0)) / 100)).toFixed(2)}
               </div>
