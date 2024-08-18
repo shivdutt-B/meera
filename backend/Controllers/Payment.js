@@ -72,7 +72,8 @@ exports.stripeWebHook = async (request, response) => {
                 endpointSecret
             );
         } catch (err) {
-            return response.sendStatus(900);
+            console.log('HERE IS THE ERROR: ', err)
+            return response.sendStatus(400);
         }
     }
 
