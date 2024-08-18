@@ -16,12 +16,12 @@ const bodyParser = require('body-parser')
 // Create server
 const server = express()
 
-// server.use(bodyParser.urlencoded({ extended: false }))
-// server.use(bodyParser.json({
-//   verify: (req, res, buf) => {
-//     req.rawBody = buf
-//   }
-// }))
+server.use(bodyParser.urlencoded({ extended: false }))
+server.use(bodyParser.json({
+  verify: (req, res, buf) => {
+    req.rawBody = buf
+  }
+}))
 
 // Setting up frontend url
 const corsOptions = {
