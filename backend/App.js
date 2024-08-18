@@ -43,6 +43,7 @@ server.use(paymentRouter.paymentRouter)
 main().catch(err => console.log(err));
 async function main() {
   const condb = await mongoose.connect(process.env.CONNECT_DB);
+  console.log('Connected to MongoDB')
 }
 
 server.listen(8080)
