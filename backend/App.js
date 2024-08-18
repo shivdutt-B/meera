@@ -17,11 +17,11 @@ const server = express()
 
 // Setting up frontend url
 const corsOptions = {
-  origin: 'https://meera-kohl.vercel.app/',
+  origin: 'https://meera-kohl.vercel.app',
 };
 
 //Middleware
-server.use(cors())
+server.use(cors(corsOptions))
 server.use(express.json())
 server.use(cookieParser())
 server.use(userRoute.userRouter)
