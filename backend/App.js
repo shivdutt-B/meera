@@ -17,7 +17,7 @@ const server = express()
 
 // Setting up frontend url
 const corsOptions = {
-  origin: 'https://meera-kohl.vercel.app/', // Replace with the URL you want to allow
+  origin: 'https://meera-kohl.vercel.app',
 };
 
 //Middleware
