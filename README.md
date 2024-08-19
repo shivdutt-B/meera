@@ -3,7 +3,7 @@ Discover a world of quality and convenience at Meera, where shopping for fashion
 [Meera](https://meera-kohl.vercel.app/)
 
 # Screenshot
-![Meera-1](./readmeAssets/image-1.png)
+![Meera-1](https://github.com/shivdutt-B/meera/blob/main/readmeAssets/image-7.png)
 
 ---
 
