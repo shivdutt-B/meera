@@ -1,5 +1,5 @@
-# Apple Homepage Clone
-Discover a world of quality and convenience at Meera, where shopping for fashion, electronics, home goods is made easy. Our carefully curated collection offers something for everyone, whether you're looking for the latest trends, essential items, or unique finds
+# Meera
+Discover a world of quality and convenience at Meera, where shopping for fashion, electronics, home goods is made easy. Our carefully curated collection offers something for everyone, whether you're looking for the latest trends, essential items, or unique finds.
 [Meera](https://meera-kohl.vercel.app/)
 
 # Screenshot
