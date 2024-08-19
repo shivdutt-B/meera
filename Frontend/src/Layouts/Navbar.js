@@ -37,7 +37,7 @@ function Navbar() {
 
                     <div className="search-bar">
                         <form action="" className="search-bar-form" onSubmit={(e) => { handleSubmit(e) }}>
-                            <input type="text" value={searchValue} className="main-search-bar-input" onChange={(e) => { setSearchValue(e.target.value) }} placeholder="search your " />
+                            <input type="text" value={searchValue} className="main-search-bar-input" onChange={(e) => { setSearchValue(e.target.value) }} placeholder="search products, brands and more" />
                             <i class="fa-solid fa-xmark clear-search" onClick={clearSearch}></i>
                         </form>
                     </div>
