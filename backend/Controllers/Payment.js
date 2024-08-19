@@ -16,7 +16,7 @@ exports.payment = async (req, res) => {
                     price_data: {
                         currency: 'usd',
                         product_data: { name: item.title },
-                        unit_amount: item.price*100,
+                        unit_amount: parseFloat((item.price*100).toFixed(2)),
                     },
                     quantity: item.count,
                 };
