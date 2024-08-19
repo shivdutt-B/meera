@@ -3,43 +3,43 @@ Discover a world of quality and convenience at Meera, where shopping for fashion
 [Meera](https://meera-kohl.vercel.app/)
 
 # Screenshot
-![Meera-1](./readmeAssets/image-1.png)
+![Meera-1](./readme.assets/image-1.png)
 
 ---
 
-![Meera-2](./readmeAssets/image-2.png)
+![Meera-2](./readme.assets/image-2.png)
 
 ---
 
-![Meera-3](./readmeAssets/image-3.png)
+![Meera-3](./readme.assets/image-3.png)
 
 ---
 
-![Meera-4](./readmeAssets/image-4.png)
+![Meera-4](./readme.assets/image-4.png)
 
 ---
 
-![Meera-5](./readmeAssets/image-5.png)
+![Meera-5](./readme.assets/image-5.png)
 
 ---
 
-![apple-clone-6](./readmeAssets/image-6.png)
+![apple-clone-6](./readme.assets/image-6.png)
 
 ---
 
-![apple-clone-7](./readmeAssets/image-7.png)
+![apple-clone-7](./readme.assets/image-7.png)
 
 ---
 
-![apple-clone-8](./readmeAssets/image-8.png)
+![apple-clone-8](./readme.assets/image-8.png)
 
 ---
 
-![apple-clone-9](./readmeAssets/image-9.png)
+![apple-clone-9](./readme.assets/image-9.png)
 
 ---
 
-![apple-clone-10](./readmeAssets/image-10.png)
+![apple-clone-10](./readme.assets/image-10.png)
 
 
 # Technologies Used
