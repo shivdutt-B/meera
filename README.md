@@ -65,6 +65,8 @@ Explore our platform and enjoy a state-of-the-art online shopping experience at 
 - Responsive design for various screen sizes.
 - Secure payments.
 - Clean UI.
+- Categorized products for better search.
+- Includes a search feature allowing users to find products easily.
 
 
 # Clone the repository
