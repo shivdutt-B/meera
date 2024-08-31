@@ -25,7 +25,7 @@ server.use(bodyParser.json({
 
 // Setting up frontend url
 const corsOptions = {
-  origin: 'https://meera-kohl.vercel.app',
+  origin: ['https://meera-kohl.vercel.app', 'http://localhost:3000']
 };
 
 //Middleware

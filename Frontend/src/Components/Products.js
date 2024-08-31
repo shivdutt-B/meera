@@ -7,33 +7,52 @@ function Products() {
   const ContextItems = useContext(ContextName)
   const navigate = useNavigate()
   const [currentCategory, setCurrentCategory] = useState()
+  const [product, setProduct] = useState([])
 
-  const filterProductsByCategory = (products, category) => {
-    return products.filter(product => {
-      if (Array.isArray(category)) {
-        return category.includes(product.category);
-      }
-      return product.category === category;
-    });
-  };
+  // const filterProductsByCategory = (products, category) => {
+  //   return products.filter(product => {
+  //     if (Array.isArray(category)) {
+  //       return category.includes(product.category);
+  //     }
+  //     return product.category === category;
+  //   });
+  // };
 
-  async function fetchByCategory() {
-    try {
+  // async function fetchByCategory() {
+  //   try {
+  //     const category = await sessionStorage.getItem("category")
+  //     setCurrentCategory(category)
+  //     console.log('IAM HERE@', category.includes("&") ? category.split('&').map((element) => {return element.trim()}) : [category])
+
+  //     if (ContextItems.categoryData[category]) {
+  //       console.log('ITEMS ALREADY THERE')
+  //     }
+  //     else {
+  //       ContextItems.setProgress(10)
+  //       const categoryName = category.includes("&") ? category.split('&').map((element) => { return element.trim() }) : category;
+  //       const filterProducts = filterProductsByCategory(ContextItems.products, categoryName)
+  //       ContextItems.categoryData[category] = filterProducts
+  //       ContextItems.setProgress(100)
+  //     }
+  //   } catch (error) {
+  //     navigate('/error')
+  //   }
+  //   finally {
+  //     ContextItems.setProgress(100)
+  //   }
+  // }
+
+
+  async function fetchByCategoryCaller() {
+    try{
+      ContextItems.setProgress(10)
       const category = await sessionStorage.getItem("category")
       setCurrentCategory(category)
-
-      if (ContextItems.categoryData[category]) {
-        // we already have the products no need to fetch them
-      }
-      else {
-        ContextItems.setProgress(10)
-        const categoryName = category.includes("&") ? category.split('&').map((element) => { return element.trim() }) : category;
-        const filterProducts = filterProductsByCategory(ContextItems.products, categoryName)
-        ContextItems.categoryData[category] = filterProducts
-        ContextItems.setProgress(100)
-      }
-    } catch (error) {
-      navigate('/error')
+      const categoryList = await category.includes("&") ? category.split('&').map((element) => {return element.trim()}) : [category]
+      await ContextItems.productCategory(categoryList, setProduct)
+      ContextItems.setProgress(100)
+    } catch(e) {
+      navigate('/erro')
     }
     finally {
       ContextItems.setProgress(100)
@@ -76,17 +95,19 @@ function Products() {
     return elements
   }
 
+  
   useEffect(() => {
-    fetchByCategory()
+    fetchByCategoryCaller()
   }, [])
 
   return (
     <div className="main">
       <div className="gutter">
         {
-          ContextItems.categoryData[currentCategory] ?
+          product.length > 0 ?
             <div className="product-container">
-              {ContextItems.categoryData[currentCategory].map((element) => {
+              {
+              product.map((element) => {
                 return (
                   <div className="product-card-container">
                     <div className="add-to-cart" onClick={(e) => { ContextItems.handleCartClick(e, element, ContextItems.user, navigate, ContextItems.setCartCount, ContextItems.setProgress, ContextItems.cart, ContextItems.setCart) }}>

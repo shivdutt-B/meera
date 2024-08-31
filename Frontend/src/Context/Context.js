@@ -24,6 +24,33 @@ const ContextData = (props) => {
     const [relatedProducts, setRelatedProducts] = useState([])
     const [currentQuery, setCurrentQuery] = useState('')
 
+
+    async function productCategory(category, state) {
+        /*
+        Need to pass a list of category(s) this function will fetch products according to that and set the products in local state.
+        - Calling  this function from context to fetch products of home page. Example Categories - [beauty, fragrances, skin-care, smartphones, laptops, groceries].
+        - When any category/banner is clicked then calling this function in the component's useEffect and set products in local state. And display those products.
+        */
+        try {
+            const fetchCategoryProducts = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/products`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "category": category })
+            })
+            const parsedData = await fetchCategoryProducts.json()
+            if (parsedData.success) {
+                state(parsedData.products)
+            }
+        } catch (e) {
+            navigate('/error')
+        }
+
+    }
+
+
+
     async function fetchProducts() {
         try {
             if (products.length > 0) {
@@ -45,7 +72,6 @@ const ContextData = (props) => {
 
     async function handleCartClick(e, element, user, navigate, setCartCount, setProgress, cart, setCart) {
         try {
-            console.log('CLICKED ')
             if (Object.keys(user).length > 0) {
 
                 setProgress(30)
@@ -59,11 +85,11 @@ const ContextData = (props) => {
                 if (isItemInCart) {
 
                     const removeFromCart = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/removefromcart`, {
-                        method: 'POST', 
+                        method: 'POST',
                         headers: {
-                            'Authorization': `Bearer ${token}`, 
+                            'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json',
-                        }, 
+                        },
                         body: JSON.stringify({ "_id": element._id })
                     })
                     const parsedRemoveFromCart = await removeFromCart.json()
@@ -75,7 +101,6 @@ const ContextData = (props) => {
                     }
                 }
                 else {
-                    console.log('ADD THIS ITEM: ', element)
                     const addToCart = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/addToCart`, {
                         method: 'POST',
                         headers: {
@@ -85,7 +110,6 @@ const ContextData = (props) => {
                         body: JSON.stringify({ element })
                     })
                     const addToCartParsed = await addToCart.json()
-                    console.log('Code 88', addToCartParsed)
                     if (addToCartParsed.success) {
                         setCartCount(addToCartParsed.length)
                         cart.push(element)
@@ -114,11 +138,11 @@ const ContextData = (props) => {
             setProgress(10)
             const token = sessionStorage.getItem('token')
             const removeFromCart = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/removefromcart`, {
-                method: 'POST', 
+                method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`, 
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
-                }, 
+                },
                 body: JSON.stringify({ "_id": element._id })
             })
             const parsedRemoveFromCart = await removeFromCart.json()
@@ -160,7 +184,6 @@ const ContextData = (props) => {
 
     async function fetchUser() {
         setProgress(10)
-        console.log('HII THERE')
         try {
             if (Object.keys(user).length > 0) {
                 // User is already present so no need to fetch again.
@@ -180,7 +203,6 @@ const ContextData = (props) => {
                         }
                     })
                     const parsedFetch = await fetchUser.json()
-                    console.log('CODE 1', parsedFetch)
                     setProgress(50)
                     if (parsedFetch.user) {
                         // Setting all the information from user
@@ -202,7 +224,6 @@ const ContextData = (props) => {
                 }
             }
         } catch (error) {
-            console.log('HEELOO', error)
             navigate('/error')
         }
         finally {
@@ -212,14 +233,17 @@ const ContextData = (props) => {
 
 
     useEffect(() => {
-        fetchProducts()
+        // fetchProducts()
+        if (!(products.length > 0)) {
+            productCategory(['beauty', 'fragrances', 'skin-care', 'smartphones', 'laptops', 'groceries'], setProducts)
+        }
         fetchUser()
     }, [])
 
 
     return (
         <ContextName.Provider value={{
-            cart, setCart, products, setProducts, user, setUser, fetchProducts, handleCartClick, deleteItem, toBeOrder, setToBeOrder, tempCart, setTempCart, cartOfOrders, setCartOfOrders, bookedProducts, setBookedProducts, TransferData, cartCount, setCartCount, order, setOrder, cartCost, setCartCost, orderCost, setOrderCost, checkLoading, setCheckLoading, progress, setProgress, categoryData, setCategoryData, relatedProducts, setRelatedProducts, priceSetter, currentQuery, setCurrentQuery
+            cart, setCart, products, setProducts, user, setUser, fetchProducts, handleCartClick, deleteItem, toBeOrder, setToBeOrder, tempCart, setTempCart, cartOfOrders, setCartOfOrders, bookedProducts, setBookedProducts, TransferData, cartCount, setCartCount, order, setOrder, cartCost, setCartCost, orderCost, setOrderCost, checkLoading, setCheckLoading, progress, setProgress, categoryData, setCategoryData, relatedProducts, setRelatedProducts, priceSetter, currentQuery, setCurrentQuery, productCategory
         }}>
             {props.children}
         </ContextName.Provider>

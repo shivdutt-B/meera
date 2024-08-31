@@ -2,7 +2,8 @@ const productModel = require('../Models/Product')
 
 exports.showAll = async (req, res) => {
     try {
-        const products = await productModel.productModel.find()
+        const categories = req.body.category
+        const products = await productModel.productModel.find({ category: { $in: categories } })
         res.json({ success: true, 'products': products })
     } catch (error) {
         res.json({ success: false })

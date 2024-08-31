@@ -22,12 +22,6 @@ import SearchResult from './Components/SearchResult';
 import PaymentFailed from './Components/PaymentFailed';
 import ErrorPage from './Components/ErrorPage';
 
-// TODO:
-// CUSTOM MESSAGE FOR USER SIGNIN AND SIGNUP STATUS.
-// IF ANY ERROR OCCURS THEN SUCCESS SHOULD BE ERROR OTHERWISE IT SHOULD BE FALSE AND A CUSTOM MESSAGE.
-
-
-
 function App() {
   return (
     <div className="App">
