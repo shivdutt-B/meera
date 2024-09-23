@@ -4,51 +4,42 @@ import { ContextName } from '../Context/Context'
 import { Link } from 'react-router-dom'
 import Slider from "react-slick";
 import axios from 'axios';
+import Loading from './Loading';
 
 
-function DisplayProduct() {
+
+function DisplayProduct(props) {
   const navigate = useNavigate()
   const [productInfo, setProductInfo] = useState({})
   const [posterToDisplay, setPosterToDisplay] = useState()
   const ContextItems = useContext(ContextName)
-  const [orderQnt, setOrderQnt] = useState(1)
 
   async function fetchByCategory() {
-    try {
-      const category = await sessionStorage.getItem("productCategory");
-      const fetch = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/category`, { category: category })
-      if (fetch.data.success) {
-        await ContextItems.setRelatedProducts(fetch.data.products)
-      }
-      else {
-        navigate('/error')
-      }
-    } catch (error) {
-      navigate('/error')
-    }
+    const category = await sessionStorage.getItem("productCategory");
+    // const fetch = await axios.post(`http://localhost:8080/category`, { category: category.includes('&') ? category.split('&').map((element) => { return element.trim() }) : category })
+    const fetch = await axios.post(`http://localhost:8080/category`, { category: category })
+    console.log('CURRENT CATEGORY', fetch)
+
+    await ContextItems.setRelatedProducts(fetch.data.products)
   }
 
   function sessionStorageParser() {
-    try {
-      const parsedData = JSON.parse(sessionStorage.getItem('productInfo'))
-      setProductInfo(parsedData)
-      setPosterToDisplay(parsedData.thumbnail)
-    } catch (error) {
-      navigate('/error')
-    }
+    const parsedData = JSON.parse(sessionStorage.getItem('productInfo'))
+    setProductInfo(parsedData)
+    setPosterToDisplay(parsedData.thumbnail)
   }
 
   async function fetchOnSame(element, navigate) {
-    try {
-      ContextItems.TransferData(element, navigate)
-      sessionStorageParser()
-      fetchByCategory()
-    } catch (error) {
-      navigate('/error')
-    }
+    ContextItems.TransferData(element, navigate)
+    sessionStorageParser()
+    fetchByCategory()
 
   }
   useEffect(() => {
+    console.log('use effect ran again')
+    // const parsedData = JSON.parse(sessionStorage.getItem('productInfo'))
+    // setProductInfo(parsedData)
+    // setPosterToDisplay(parsedData.thumbnail)
     sessionStorageParser()
     fetchByCategory()
   }, [])
@@ -76,64 +67,31 @@ function DisplayProduct() {
   };
 
   function setImageAndBorder(event, image) {
-    try {
-      let currentElement = event.target.closest('.display-product-small-image')
+    let currentElement = event.target.closest('.display-product-small-image')
 
-      setPosterToDisplay(image)
+    // Setting image to display (big).
+    setPosterToDisplay(image)
 
-      // Remove border from all other images by remove the class which will also take out the styles.
-      let allImages = Object.values(document.querySelector(".display-product-images").children)
-      allImages.map((element) => element.classList.remove('active-small-image'))
+    // Remove border from all other images by remove the class which will also take out the styles.
+    let allImages = Object.values(document.querySelector(".display-product-images").children)
+    allImages.map((element) => element.classList.remove('active-small-image'))
 
-      // Adding the class to the image which is clicked. The class will apply the styles.
-      currentElement.classList.add('active-small-image')
-    } catch (error) {
-      navigate('/error')
-    }
+    // Adding the class to the image which is clicked. The class will apply the styles.
+    currentElement.classList.add('active-small-image')
 
+  }
+
+  async function payment() {
+    console.log('CLICKED XXXX')
+    console.log('clicked', ContextItems.cart)
+    const payment = await axios.post("http://localhost:8080/payment", ContextItems.cart)
+    console.log('from payment', payment)
+    window.location = payment.data.url
   }
 
   function setToBeOrder(element) {
-    try {
-      if (ContextItems.user) {
-        element.count = orderQnt;
-        sessionStorage.setItem('toBeOrder', JSON.stringify([element]))
-        navigate('/summary')
-      } else {
-        navigate('/signin')
-      }
-    } catch (error) {
-      navigate('/error')
-    }
-  }
-
-  const handleOrderQnt = (event) => {
-    try {
-      const value = event.target.value;
-      if (value >= 0 && value <= 10) {
-        setOrderQnt(value);
-      }
-    } catch (error) {
-      navigate('/error')
-    }
-  };
-
-  function incDecItem(e) {
-    try {
-      const element = e.target.closest(".order-qnt-controller")
-      if (orderQnt <= 9) {
-        if (element.getAttribute('data-qntController') == "plus") {
-          setOrderQnt(orderQnt + 1)
-        }
-        else {
-          if (!(orderQnt == 1)) {
-            setOrderQnt(orderQnt - 1)
-          }
-        }
-      }
-    } catch (error) {
-      navigate('/error')
-    }
+    sessionStorage.setItem('toBeOrder', JSON.stringify([element]))
+    navigate('/summary')
   }
 
   return (
@@ -161,13 +119,6 @@ function DisplayProduct() {
           <div className="display-product-poster">
             <img src={posterToDisplay} />
             <div className="display-product-order-cart-book">
-              <div className="display-product-order-qnt-container">
-                <div className="order-qnt-controller" data-qntController="plus" onClick={(e) => { incDecItem(e) }}><i className="fas fa-plus" ></i></div>
-                <div>
-                  <input className="display-product-order-qnt-input" type="number" min="1" max="10" value={orderQnt} onChange={(e) => { handleOrderQnt(e) }}></input>
-                </div>
-                <div className="order-qnt-controller" data-qntController="minus" onClick={(e) => { incDecItem(e) }}><i className="fas fa-minus"></i></div>
-              </div>
               <div className="display-product-order" onClick={() => setToBeOrder(productInfo)}><i class="fa-solid fa-bolt"></i> Order</div>
               {
                 ContextItems.cart.some((element) => {
@@ -175,7 +126,7 @@ function DisplayProduct() {
                 }) ?
                   <div onClick={(e) => { ContextItems.handleCartClick(e, productInfo, ContextItems.user, navigate, ContextItems.setCartCount, ContextItems.setProgress, ContextItems.cart, ContextItems.setCart) }} className="display-product-cart"><i class="fa-solid fa-cart-shopping"></i> Uncart</div>
                   :
-                  <div onClick={(e) => { productInfo.count = orderQnt; ContextItems.handleCartClick(e, productInfo, ContextItems.user, navigate, ContextItems.setCartCount, ContextItems.setProgress, ContextItems.cart, ContextItems.setCart) }} className="display-product-cart"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</div>
+                  <div onClick={(e) => { ContextItems.handleCartClick(e, productInfo, ContextItems.user, navigate, ContextItems.setCartCount, ContextItems.setProgress, ContextItems.cart, ContextItems.setCart) }} className="display-product-cart"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</div>
               }
             </div>
           </div>
@@ -200,9 +151,7 @@ function DisplayProduct() {
             <div className='display-product-pricing'>
               <div className="display-product-price-after-discount">
                 <i class="fas fa-dollar-sign"></i>
-                {(Number(productInfo.price) - ((Number(productInfo.price) * Number(productInfo.discountPercentage ? productInfo.
-                  discountPercentage : 0)) / 100)).toFixed(2)}
-              </div>
+                {Math.floor(productInfo.price - (productInfo.discountPercentage * productInfo.price) / 100)}</div>
               <div className="display-product-price-before-discount"><i class="fas fa-dollar-sign"></i>{productInfo.price}</div>
               <div className="display-product-price-discount">{productInfo.discountPercentage}% off</div>
             </div>
@@ -216,15 +165,10 @@ function DisplayProduct() {
               <span className="display-product-category-span display-product-heading-key">Category: </span> {productInfo.category}
             </div>
             <div className="display-product-delivery-address">
-              <span className="display-product-delivery-address-span display-product-heading-key">Address: </span>
-              {
-                ContextItems.user ?
-                  ContextItems.user.address ? ContextItems.user.address : <Link to="/address">Enter Address</Link>
-                  :
-                  <>
-                    --
-                  </>
-              }
+              <span className="display-product-delivery-address-span display-product-heading-key">Address: </span> {ContextItems.user.address ? ContextItems.user.address :
+                <>
+                  <Link to="/address">Enter address</Link>
+                </>}
             </div>
             <div className="display-product-shipping">
               <span className="display-product-shipping-span display-product-heading-key">Shipping: </span> {productInfo.shippingInformation}
@@ -289,6 +233,9 @@ function DisplayProduct() {
             </div>
           </div>
         </div>
+
+        {/* This is for small screen (950px) */}
+        {console.log('no of imav', productInfo.images.length)}
         {
           Object.keys(productInfo).length > 0 &&
           <div className="display-product-container-small">
@@ -296,6 +243,7 @@ function DisplayProduct() {
               <Slider {...settings}>
                 {
                   productInfo.images.map((image) => {
+                    console.log('THIS IS IAMGE', image)
                     return (
                       <div className="display-product-image-container-small">
                         <img src={image} alt="som product" />
@@ -308,13 +256,6 @@ function DisplayProduct() {
 
 
             <div className="display-product-order-cart-book display-product-order-cart-book-small">
-              <div className="display-product-order-qnt-container">
-                <div className="order-qnt-controller" data-qntController="plus" onClick={(e) => { incDecItem(e) }}><i className="fas fa-plus" ></i></div>
-                <div>
-                  <input className="display-product-order-qnt-input" type="number" min="1" max="10" value={orderQnt} onChange={(e) => { handleOrderQnt(e) }}></input>
-                </div>
-                <div className="order-qnt-controller" data-qntController="minus" onClick={(e) => { incDecItem(e) }}><i className="fas fa-minus"></i></div>
-              </div>
               <div className="display-product-order" onClick={() => setToBeOrder(productInfo)}><i class="fa-solid fa-bolt"></i> Order</div>
               {
                 ContextItems.cart.some((element) => {
@@ -336,102 +277,97 @@ function DisplayProduct() {
                 </div>
               </div>
               <div className="display-product-rating-review">
-                <div className="display-product-star">
-                  {productInfo.rating}  <i class="fa-solid fa-star"></i>
-                </div>
-                <div className="display-product-and">&</div>
-                <div className="display-product-review">
-                  {productInfo.reviews.length} Reviews
-                </div>
+              <div className="display-product-star">
+                {productInfo.rating}  <i class="fa-solid fa-star"></i>
               </div>
-              <div className='display-product-pricing display-product-pricing-small'>
-                <div className="display-product-price-after-discount">
-                  <i class="fas fa-dollar-sign"></i>
-                  {Math.floor(productInfo.price - (productInfo.discountPercentage * productInfo.price) / 100)}</div>
-                <div className="display-product-price-before-discount"><i class="fas fa-dollar-sign"></i>{productInfo.price}</div>
-                <div className="display-product-price-discount">{productInfo.discountPercentage}% off</div>
+              <div className="display-product-and">&</div>
+              <div className="display-product-review">
+                {productInfo.reviews.length} Reviews
               </div>
-              <div className="display-product-stock">
-                <span className="display-product-stock-span display-product-heading-key">Stock: </span> {productInfo.stock}
-              </div>
-              <div className="display-product-brand">
-                <span className="display-product-brand-span display-product-heading-key">Brand: </span> {productInfo.brand}
-              </div>
-              <div className="display-product-category">
-                <span className="display-product-category-span display-product-heading-key">Category: </span> {productInfo.category}
-              </div>
-              <div className="display-product-delivery-address">
-                <span className="display-product-delivery-address-span display-product-heading-key">Address: </span>
+            </div>
+            <div className='display-product-pricing display-product-pricing-small'>
+              <div className="display-product-price-after-discount">
+                <i class="fas fa-dollar-sign"></i>
+                {Math.floor(productInfo.price - (productInfo.discountPercentage * productInfo.price) / 100)}</div>
+              <div className="display-product-price-before-discount"><i class="fas fa-dollar-sign"></i>{productInfo.price}</div>
+              <div className="display-product-price-discount">{productInfo.discountPercentage}% off</div>
+            </div>
+            <div className="display-product-stock">
+              <span className="display-product-stock-span display-product-heading-key">Stock: </span> {productInfo.stock}
+            </div>
+            <div className="display-product-brand">
+              <span className="display-product-brand-span display-product-heading-key">Brand: </span> {productInfo.brand}
+            </div>
+            <div className="display-product-category">
+              <span className="display-product-category-span display-product-heading-key">Category: </span> {productInfo.category}
+            </div>
+            <div className="display-product-delivery-address">
+              <span className="display-product-delivery-address-span display-product-heading-key">Address: </span> {ContextItems.user.address ? ContextItems.user.address :
+                <>
+                  <Link to="/address">Enter address</Link>
+                </>}
+            </div>
+            <div className="display-product-shipping">
+              <span className="display-product-shipping-span display-product-heading-key">Shipping: </span> {productInfo.shippingInformation}
+            </div>
+            <div className="display-product-warranty">
+              <span className="display-product-warranty-span display-product-heading-key">Warranty: </span> {productInfo.warrantyInformation}
+            </div>
+            <div className="display-product-shipping">
+              <span className="display-product-return-policy-span display-product-heading-key">Return Policy: </span> {productInfo.returnPolicy}
+            </div>
+            <div className="display-product-structure">
+              <span className="display-product-structure-span display-product-heading-key">Structure: </span>
+              <table className="display-product-structure-table">
+                <tbody>
+                  <tr>
+                    <td className="td-key">Weight</td>
+                    <td className="td-value">{productInfo.weight} lbs</td>
+                  </tr>
+                  <tr>
+                    <td className="td-key">Width</td>
+                    <td className="td-value">{productInfo.dimensions.width} inchs</td>
+                  </tr>
+                  <tr>
+                    <td className="td-key">Height</td>
+                    <td className="td-value">{productInfo.dimensions.height} inchs</td>
+                  </tr>
+                  <tr>
+                    <td className="td-key">Depth</td>
+                    <td className="td-value">{productInfo.dimensions.depth} inchs</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div className="display-product-reviews">
+              <span className="display-product-reviews-span display-product-heading-key">Reviews: </span>
+              <div className="review-container-wrapper">
                 {
-                  ContextItems.user ?
-                    ContextItems.user.address ? ContextItems.user.address : <Link to="/address">Enter Address</Link>
-                    :
-                    <>
-                      --
-                    </>
+                  Object.values(productInfo.reviews).map(review => {
+                    return (
+                      <div className="review-container">
+                        <div className="rating-name-container">
+                          {
+                            review.rating < 2.5 ?
+                              <div className="rating-container" style={{ backgroundColor: "red" }}>
+                                {review.rating} <i class="fa-solid fa-star"></i>
+                              </div>
+                              :
+
+                              <div className="rating-container">
+                                {review.rating} <i class="fa-solid fa-star"></i>
+                              </div>
+                          }
+                          <div className="reviewer-name-container">{review.reviewerName}</div>
+                        </div>
+                        <div className="review-comment-container">{review.comment}</div>
+                        <div className="review-date-container">{review.date}</div>
+                      </div>
+                    )
+                  })
                 }
               </div>
-              <div className="display-product-shipping">
-                <span className="display-product-shipping-span display-product-heading-key">Shipping: </span> {productInfo.shippingInformation}
-              </div>
-              <div className="display-product-warranty">
-                <span className="display-product-warranty-span display-product-heading-key">Warranty: </span> {productInfo.warrantyInformation}
-              </div>
-              <div className="display-product-shipping">
-                <span className="display-product-return-policy-span display-product-heading-key">Return Policy: </span> {productInfo.returnPolicy}
-              </div>
-              <div className="display-product-structure">
-                <span className="display-product-structure-span display-product-heading-key">Structure: </span>
-                <table className="display-product-structure-table">
-                  <tbody>
-                    <tr>
-                      <td className="td-key">Weight</td>
-                      <td className="td-value">{productInfo.weight} lbs</td>
-                    </tr>
-                    <tr>
-                      <td className="td-key">Width</td>
-                      <td className="td-value">{productInfo.dimensions.width} inches</td>
-                    </tr>
-                    <tr>
-                      <td className="td-key">Height</td>
-                      <td className="td-value">{productInfo.dimensions.height} inches</td>
-                    </tr>
-                    <tr>
-                      <td className="td-key">Depth</td>
-                      <td className="td-value">{productInfo.dimensions.depth} inches</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className="display-product-reviews">
-                <span className="display-product-reviews-span display-product-heading-key">Reviews: </span>
-                <div className="review-container-wrapper">
-                  {
-                    Object.values(productInfo.reviews).map(review => {
-                      return (
-                        <div className="review-container">
-                          <div className="rating-name-container">
-                            {
-                              review.rating < 2.5 ?
-                                <div className="rating-container" style={{ backgroundColor: "red" }}>
-                                  {review.rating} <i class="fa-solid fa-star"></i>
-                                </div>
-                                :
-
-                                <div className="rating-container">
-                                  {review.rating} <i class="fa-solid fa-star"></i>
-                                </div>
-                            }
-                            <div className="reviewer-name-container">{review.reviewerName}</div>
-                          </div>
-                          <div className="review-comment-container">{review.comment}</div>
-                          <div className="review-date-container">{review.date}</div>
-                        </div>
-                      )
-                    })
-                  }
-                </div>
-              </div>
+            </div>
             </div>
 
           </div>
