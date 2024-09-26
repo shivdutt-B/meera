@@ -100,27 +100,27 @@ function Home() {
           <Slider {...settings}>
             <div className="banner">
               <Link to="products" className="banner-link" data-category="furniture&home-decoration&vehicle&motorcycle" onClick={(e) => { transferProductCategory(e) }}>
-                <img loading="lazy" src={FurnitureBanner} alt="" />
+                <img  src={FurnitureBanner} alt="" />
               </Link>
             </div>
             <div className="banner">
               <Link to="products" className="banner-link" data-category="sports-accessories" onClick={(e) => { transferProductCategory(e) }}>
-                <img loading="lazy"  src={ToysBanner} alt="" />
+                <img   src={ToysBanner} alt="" />
               </Link>
             </div>
             <div className="banner">
               <Link to="products" className="banner-link" data-category="mens-shoes&womens-shoes" onClick={(e) => { transferProductCategory(e) }}>
-                <img loading="lazy"  src={ShoesBanner} alt="" />
+                <img   src={ShoesBanner} alt="" />
               </Link>
             </div>
             <div className="banner">
               <Link to="products" className="banner-link" data-category="groceries" onClick={(e) => { transferProductCategory(e) }}>
-                <img loading="lazy"  src={GroceryBanner} alt="" />
+                <img   src={GroceryBanner} alt="" />
               </Link>
             </div>
             <div className="banner">
               <Link to="products" className="banner-link" data-category="mens-watches & mens-shirts & mens-shoes & womens-watches & womens-shoes & womens-jewellery & womens-dresses & womens-bags & tops" onClick={(e) => { transferProductCategory(e) }}>
-                <img loading="lazy"  src={FashionBanner} alt="" />
+                <img   src={FashionBanner} alt="" />
               </Link>
             </div>
           </Slider>
@@ -131,7 +131,7 @@ function Home() {
             <Link to="products" className="jewelry-container" data-category="womens-jewellery" onClick={(e) => { transferProductCategory(e) }}>
               <div className="jewelry">
                 <div className="jewelry-poster">
-                  <img loading="lazy"  src={ProductJewelry} alt="" />
+                  <img   src={ProductJewelry} alt="" />
                 </div>
                 <div className="jewelry-heading">
                   <h1>Jewelry</h1>
@@ -141,7 +141,7 @@ function Home() {
             <Link to="products" className="skin-container" data-category="beauty&fragrances&skin-care" onClick={(e) => { transferProductCategory(e) }}>
               <div className="skin">
                 <div className="skin-poster">
-                  <img loading="lazy"  src={ProductSkinCare} alt="" />
+                  <img   src={ProductSkinCare} alt="" />
                 </div>
                 <div className="skin-heading">
                   <h1>Skin Products</h1>
@@ -151,7 +151,7 @@ function Home() {
             <Link to="/products" className="men-cloths-container" data-category="mens-watches & mens-shirts & mens-shoes & sunglasses" onClick={(e) => { transferProductCategory(e) }}>
               <div className="men-cloths">
                 <div className="men-cloths-poster">
-                  <img loading="lazy"  src={ProductMenCloths} alt="" />
+                  <img   src={ProductMenCloths} alt="" />
                 </div>
                 <div className="men-cloths-heading">
                   <h1>Men's Cloths</h1>
@@ -160,7 +160,7 @@ function Home() {
             </Link>
             <Link to="products" className="women-cloths-container" data-category="womens-watches & womens-shoes & womens-jewellery & womens-dresses & womens-bags & tops" onClick={(e) => { transferProductCategory(e) }}>
               <div className="women-cloths">
-                <img loading="lazy"  src={ProductWomenCloths} alt="" />
+                <img   src={ProductWomenCloths} alt="" />
               </div>
               <div className="women-cloths-heading">
                 <h1>Women's Cloths</h1>
@@ -169,7 +169,7 @@ function Home() {
           </div>
           <div className="j-s-m-w-f-second">
             <Link to="products" className="fragrance-poster" data-category="fragrances" onClick={(e) => { transferProductCategory(e) }}>
-              <img loading="lazy"  src={ProductFragrance} alt="" />
+              <img   src={ProductFragrance} alt="" />
             </Link>
           </div>
         </div>
@@ -180,7 +180,7 @@ function Home() {
               <li className="category-list-item">
                 <Link onClick={(e) => { transferProductCategory(e) }} to="/grocery" className="category-item-link" data-category="groceries">
                   <div className="category-item-pic">
-                    <img loading="lazy"  src={grocery} className="category-poster" alt="" />
+                    <img   src={grocery} className="category-poster" alt="" />
                   </div>
                   <div className="category-item-name">
                     Grocery
@@ -190,7 +190,7 @@ function Home() {
               <li className="category-list-item">
                 <Link onClick={(e) => { transferProductCategory(e) }} to="/smartphones" className="category-item-link" data-category="smartphones&mobile-accessories">
                   <div className="category-item-pic">
-                    <img loading="lazy"  src={mobile} className="category-poster" alt="" />
+                    <img   src={mobile} className="category-poster" alt="" />
                   </div>
                   <div className="category-item-name">
                     Mobile
@@ -200,7 +200,7 @@ function Home() {
               <li className="category-list-item">
                 <Link onClick={(e) => { transferProductCategory(e) }} to="/clothing" className="category-item-link" data-category="mens-watches & mens-shirts & mens-shoes&womens-watches & womens-shoes & womens-jewellery & womens-dresses & womens-bags & tops">
                   <div className="category-item-pic">
-                    <img loading="lazy"  src={fashion} className="category-poster" alt="" />
+                    <img   src={fashion} className="category-poster" alt="" />
                   </div>
                   <div className="category-item-name">
                     Fashion <i class="fa-solid fa-chevron-down"></i>
@@ -220,7 +220,7 @@ function Home() {
               <li className="category-list-item">
                 <Link onClick={(e) => { transferProductCategory(e) }} to="/toys" className="category-item-link" data-category="sports-accessories">
                   <div className="category-item-pic">
-                    <img loading="lazy"  src={toy} className="category-poster" alt="" />
+                    <img   src={toy} className="category-poster" alt="" />
                   </div>
                   <div className="category-item-name">
                     Toys
@@ -230,7 +230,7 @@ function Home() {
               <li className="category-list-item">
                 <Link onClick={(e) => { transferProductCategory(e) }} to="/electronics" className="category-item-link" data-category="mens-watches&womens-watches&mobile-accessoreis&tablets&laptops&smartphones">
                   <div className="category-item-pic">
-                    <img loading="lazy"  src={electronics} className="category-poster" alt="" />
+                    <img   src={electronics} className="category-poster" alt="" />
                   </div>
                   <div className="category-item-name">
                     Electronics
@@ -240,7 +240,7 @@ function Home() {
               <li className="category-list-item">
                 <Link onClick={(e) => { transferProductCategory(e) }} to="/furniture" className="category-item-link" data-category="furniture&home-decoration">
                   <div className="category-item-pic">
-                    <img loading="lazy"  src={furniture} className="category-poster" alt="" />
+                    <img   src={furniture} className="category-poster" alt="" />
                   </div>
                   <div className="category-item-name">
                     Furniture
@@ -250,7 +250,7 @@ function Home() {
               <li className="category-list-item">
                 <Link onClick={(e) => { transferProductCategory(e) }} to="/kitchen" className="category-item-link" data-category="kitchen-accessories">
                   <div className="category-item-pic">
-                    <img loading="lazy"  src={appliences} className="category-poster" alt="" />
+                    <img   src={appliences} className="category-poster" alt="" />
                   </div>
                   <div className="category-item-name">
                     Kitchen
@@ -260,7 +260,7 @@ function Home() {
               <li className="category-list-item">
                 <Link onClick={(e) => { transferProductCategory(e) }} to="/beauty" className="category-item-link" data-category="beauty&fragrances&skin-care">
                   <div className="category-item-pic">
-                    <img loading="lazy"  src={cosmatics} className="category-poster" alt="" />
+                    <img   src={cosmatics} className="category-poster" alt="" />
                   </div>
                   <div className="category-item-name">
                     Beauty
@@ -300,7 +300,7 @@ function Home() {
                           </div>
                           <Link onClick={() => { ContextItems.TransferData(element, navigate) }} className="product-card" to={`/product/${element._id}`} key={element._id}>
                             <div className="product-thumbnail">
-                              <img loading="lazy" src={element.thumbnail} style={{ width: '100%', height: '220px' }} alt="" />
+                              <img  src={element.thumbnail} style={{ width: '100%', height: '220px' }} alt="" />
                             </div>
                             <div className="product-info">
                               <div className="product-title-container">
@@ -359,7 +359,7 @@ function Home() {
                           </div>
                           <Link onClick={() => { ContextItems.TransferData(element, navigate) }} to={`/product/${element._id}`} className="product-card" key={element._id}>
                             <div className="product-thumbnail">
-                              <img loading="lazy"  src={element.thumbnail} style={{ width: '100%', height: '220px' }} alt="" />
+                              <img   src={element.thumbnail} style={{ width: '100%', height: '220px' }} alt="" />
                             </div>
                             <div className="product-info">
                               <div className="product-title-container">
@@ -418,7 +418,7 @@ function Home() {
                           </div>
                           <Link onClick={() => { ContextItems.TransferData(element, navigate) }} to={`/product/${element._id}`} className="product-card" key={element._id}>
                             <div className="product-thumbnail">
-                              <img loading="lazy"  src={element.thumbnail} style={{ width: '100%', height: '220px' }} alt="" />
+                              <img   src={element.thumbnail} style={{ width: '100%', height: '220px' }} alt="" />
                             </div>
                             <div className="product-info">
                               <div className="product-title-container">
