@@ -40,6 +40,7 @@ const ContextData = (props) => {
                 body: JSON.stringify({ "category": category })
             })
             const parsedData = await fetchCategoryProducts.json()
+            console.log('parsed: ',parsedData)
             if (parsedData.success) {
                 state(parsedData.products)
             }
